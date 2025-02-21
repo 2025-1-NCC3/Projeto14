@@ -74,15 +74,6 @@ Execute o APK e siga as instruções de seu telefone.
 Coloque código do prompt de comnando se for necessário
 ```
 
-<b>Windows:</b>
-
-Não há instalação! Apenas executável!
-Encontre o JOGO.exe na pasta executáveis e execute-o como qualquer outro programa.
-
-```sh
-Coloque código do prompt de comnando se for necessário
-```
-
 ## 💻 Configuração para Desenvolvimento
 
 Descreva como instalar todas as dependências para desenvolvimento e como rodar um test-suite automatizado de algum tipo. Se necessário, faça isso para múltiplas plataformas.
