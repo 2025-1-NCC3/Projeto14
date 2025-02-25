@@ -4,12 +4,9 @@ buildscript {
         google()
         mavenCentral()
     }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:8.1.0' // Use a versão mais recente
-        classpath 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin:2.0.1' // Versão mais recente
-    }
 }
 
 plugins {
-alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.secrets.gradle.plugin) apply false
 }

@@ -1,11 +1,12 @@
 plugins {
     alias(libs.plugins.android.application)
-    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+    alias(libs.plugins.secrets.gradle.plugin)
+
 }
 
 android {
     namespace 'com.ubercab.securityvoice'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.ubercab.securityvoice"
@@ -40,6 +41,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:21.0.1'
     implementation 'com.google.maps:google-maps-services:2.2.0'
     implementation 'org.slf4j:slf4j-simple:1.7.25'
+    implementation libs.androidx.core.ktx
+    implementation libs.google.maps
     implementation libs.appcompat
     implementation libs.material
     implementation libs.constraintlayout
