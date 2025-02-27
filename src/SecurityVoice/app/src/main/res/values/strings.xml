@@ -3,4 +3,19 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+
+    <string name="userSign_question">Quem é você?</string>
+    <string name="userSign_respMot">Motorista</string>
+    <string name="userSign_respPass">Passageiro</string>
+
+    <string name="login_mainTitle">Acesse</string>
+    <string name="login_subTitle">Com número de celular ou e-mail e senha.</string>
+    <string name="login_editTextmainIdentificator">Digite seu e-mail ou número de telefone</string>
+    <string name="login_editTextPassword">Digite sua senha</string>
+    <string name="login_checkBox">Lembrar de mim</string>
+    <string name="login_forgotPassword">Esqueci minha senha</string>
+    <string name="login_buttonRegister">Cadastrar</string>
+    <string name="login_buttonLogin">Acessar</string>
+
+
 </resources>
