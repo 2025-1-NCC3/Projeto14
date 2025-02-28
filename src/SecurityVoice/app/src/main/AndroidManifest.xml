@@ -13,10 +13,14 @@
         android:theme="@style/Theme.SecurityVoice"
         tools:targetApi="31">
         <activity
+            android:name=".RegisterDriverActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SecurityVoice2"/>
+        <activity
             android:name=".LoginActivity"
             android:exported="true"
-            android:theme="@style/Theme.SecurityVoice2"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.SecurityVoice2">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,12 +29,12 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".ui.userSign.ChooseAccountActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.SecurityVoice2"/>
+            android:theme="@style/Theme.SecurityVoice2" />
     </application>
 
 </manifest>
