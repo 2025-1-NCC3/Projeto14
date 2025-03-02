@@ -13,9 +13,14 @@
         android:theme="@style/Theme.SecurityVoice"
         tools:targetApi="31">
         <activity
+            android:name=".RegisterPassengerActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SecurityVoice2"
+            />
+        <activity
             android:name=".RegisterDriverActivity"
             android:exported="false"
-            android:theme="@style/Theme.SecurityVoice2"/>
+            android:theme="@style/Theme.SecurityVoice2" />
         <activity
             android:name=".LoginActivity"
             android:exported="true"

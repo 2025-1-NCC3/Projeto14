@@ -17,6 +17,11 @@
     <string name="login_buttonRegister">Cadastrar</string>
     <string name="login_buttonLogin">Acessar</string>
 
+    <string name="registerPassenger_title">Criar uma nova conta para Passageiro</string>
+    <string name="registerPassenger_nameEditText">Digite seu nome</string>
+    <string name="registerPassenger_lastNameEditText">Digite seu sobrenome</string>
+    <string name="registerPassenger_registerButton">Continuar</string>
+
     <string name="registerDriver_title">Criar uma nova conta para Motorista</string>
     <string name="registerDriver_nameEditText">Digite seu nome</string>
     <string name="registerDriver_lastNameEditText">Digite seu sobrenome</string>
@@ -29,7 +34,7 @@
     <string name="registerDriver_mainIdentificator">Digite seu e-mail ou número de telefone</string>
     <string name="registerDriver_password">Digite uma senha</string>
     <string name="registerDriver_registerButton">Cadastrar</string>
-
+    <string name="registerDriver_alreadyHaveAccount">Já tenho uma conta</string>
 
     <string-array name="registerDriver_dayDateSpinnerOptions">
         <item>1</item>
