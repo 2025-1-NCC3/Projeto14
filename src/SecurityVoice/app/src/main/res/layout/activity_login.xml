@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity"
+    tools:context=".ui.userSign.LoginActivity"
     tools:layout_editor_absoluteX="0dp"
     tools:layout_editor_absoluteY="8dp">
 
@@ -110,7 +110,7 @@
         app:layout_constraintStart_toEndOf="@+id/checkBox" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/button3"
+        android:id="@+id/registerButton"
         android:layout_width="0dp"
         android:layout_height="60dp"
         android:layout_marginStart="40dp"
@@ -119,13 +119,13 @@
         android:background="@drawable/login_registerbutton"
         android:text="@string/login_buttonRegister"
         android:textColor="@color/white"
-        app:layout_constraintEnd_toStartOf="@+id/button4"
+        app:layout_constraintEnd_toStartOf="@+id/loginButton"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/checkBox" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/button4"
+        android:id="@+id/loginButton"
         android:layout_width="0dp"
         android:layout_height="60dp"
         android:layout_marginStart="20dp"
@@ -133,9 +133,9 @@
         android:background="@drawable/login_loginbutton"
         android:text="@string/login_buttonLogin"
         android:textColor="@color/black"
-        app:layout_constraintBaseline_toBaselineOf="@+id/button3"
+        app:layout_constraintBaseline_toBaselineOf="@+id/registerButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/button3" />
+        app:layout_constraintStart_toEndOf="@+id/registerButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

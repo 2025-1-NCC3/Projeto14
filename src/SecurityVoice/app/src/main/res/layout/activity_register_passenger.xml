@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RegisterPassengerActivity">
+    tools:context=".ui.userSign.RegisterPassengerActivity">
 
     <TextView
         android:id="@+id/textView"
@@ -70,7 +70,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout10">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/mainIdentificatorRegisterPassng"
+            android:id="@+id/mainIdentificatorRegisterPassenger"
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:background="@drawable/login_edittexttemplate"
@@ -117,7 +117,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout12" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/alreadyHaveAccountRegisterPassenger"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -137,6 +137,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/registerPassengerButton"
-        app:srcCompat="@drawable/registerPassenger_image" />
+        app:srcCompat="@drawable/registerpassenger_image" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

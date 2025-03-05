@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RegisterDriverActivity">
+    tools:context=".ui.userSign.RegisterDriverActivity">
 
     <ImageView
         android:id="@+id/imageView3"
@@ -15,7 +15,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/textInputLayout7"
-        app:srcCompat="@drawable/registerDriver_image" />
+        app:srcCompat="@drawable/registerdriver_image" />
 
     <TextView
         android:id="@+id/textView"
@@ -263,7 +263,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/alreadyHaveAccountRegisterDriver"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"

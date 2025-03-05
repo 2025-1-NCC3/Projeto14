@@ -26,7 +26,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/button"
+        android:id="@+id/driverButton"
         android:layout_width="0dp"
         android:layout_height="0dp"
 
@@ -47,14 +47,14 @@
         android:paddingBottom="300sp"
         android:text="@string/userSign_respMot"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button2"
+        app:layout_constraintEnd_toStartOf="@+id/passengerButton"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Question"
         app:layout_constraintVertical_bias="0.499" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/button2"
+        android:id="@+id/passengerButton"
         android:layout_width="0dp"
         android:layout_height="0dp"
 
@@ -76,7 +76,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/button"
+        app:layout_constraintStart_toEndOf="@+id/driverButton"
         app:layout_constraintTop_toBottomOf="@+id/Question" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
