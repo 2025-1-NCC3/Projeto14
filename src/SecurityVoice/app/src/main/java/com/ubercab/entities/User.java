@@ -16,6 +16,7 @@ public class User {
     private int yearBirthday;
 
     public User(String str, String pas) {
+        try{
         String[] filter = str.split("@");//Auxilia na identificação da diferença entre número de telefone e usuário inserido no mainIdentificator
 
         if(filter.length > 1){//Pega registro do usuário pelo e-mail
@@ -32,44 +33,65 @@ public class User {
         lastName="NaN";
         cpf="NaN";
         rg="NaN";
-        gender="NaN";
+        gender="NaN";}
+        catch(RuntimeException e){
+            System.out.println("Erro de Formacao na Pagina de Login ");
+
+        }
+        catch(Exception e){
+            System.out.println("Erro no servidor, tente novamente mais tarde");
+        }
     }
 
     public User(String name, String lastName, String str, String password) {
-        this.name = name;
-        this.lastName = lastName;
-        String[] filter = str.split("@");//Auxilia na identificação da diferença entre número de telefone e usuário inserido no mainIdentificator
+        try {
+            this.name = name;
+            this.lastName = lastName;
+            String[] filter = str.split("@");//Auxilia na identificação da diferença entre número de telefone e usuário inserido no mainIdentificator
 
-        if(filter.length > 1){//Pega registro do usuário pelo e-mail
-            email = str;
-            phoneNumber = "NaN";
-        }else{//Pega registro do usuário pelo número de telefone
-            phoneNumber = str;
-            email = "NaN";
+            if (filter.length > 1) {//Pega registro do usuário pelo e-mail
+                email = str;
+                phoneNumber = "NaN";
+            } else {//Pega registro do usuário pelo número de telefone
+                phoneNumber = str;
+                email = "NaN";
+            }
+            this.password = password;
+        } catch (RuntimeException e) {
+            System.out.println("Erro de Formacao na Pagina de Login ");
         }
-        this.password = password;
+        catch(Exception e){
+            System.out.println("Erro no servidor, tente novamente mais tarde");
+        }
     }
 
     public User(String name, String lastName, String str, String password, String cpf, String rg, String gender, int dayBirthday, String monthBirthday, int yearBirthday) {
-        this.name = name;
-        this.lastName = lastName;
-        String[] filter = str.split("@");//Auxilia na identificação da diferença entre número de telefone e usuário inserido no mainIdentificator
+        try {
+            this.name = name;
 
-        if(filter.length > 1){//Pega registro do usuário pelo e-mail
-            email = str;
-            phoneNumber = "NaN";
-        }else{//Pega registro do usuário pelo número de telefone
-            phoneNumber = str;
-            email = "NaN";
+            this.lastName = lastName;
+            String[] filter = str.split("@");//Auxilia na identificação da diferença entre número de telefone e usuário inserido no mainIdentificator
+
+            if (filter.length > 1) {//Pega registro do usuário pelo e-mail
+                email = str;
+                phoneNumber = "NaN";
+            } else {//Pega registro do usuário pelo número de telefone
+                phoneNumber = str;
+                email = "NaN";
+            }
+            this.password = password;
+            this.cpf = cpf;
+            this.rg = rg;
+            this.gender = gender;
+            this.dayBirthday = dayBirthday;
+            this.monthBirthday = monthBirthday;
+            this.yearBirthday = yearBirthday;
+        } catch (RuntimeException e) {
+            System.out.println("Erro de Formacao na Pagina de Login ");
         }
-        this.password = password;
-        this.cpf = cpf;
-        this.rg = rg;
-        this.gender = gender;
-        this.dayBirthday = dayBirthday;
-        this.monthBirthday = monthBirthday;
-        this.yearBirthday = yearBirthday;
-
+        catch (Exception e){
+            System.out.println("Erro no servidor, tente novamente mais tarde");
+        }
     }
 
     public int getId() {
