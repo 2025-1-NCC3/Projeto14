@@ -1,5 +1,8 @@
 package com.ubercab.entities;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class User {
     private int id;
     private String name;
@@ -33,12 +36,26 @@ public class User {
         lastName="NaN";
         cpf="NaN";
         rg="NaN";
-        gender="NaN";}
+        gender="NaN";
+        Map<String, String> successMap = new HashMap<>();
+        System.out.println("Conexão bem-sucedida: " + successMap);
+        successMap.put("message", "Usuário cadastrado com sucesso!");
+        successMap.put("status", "200");
+        }
+
         catch(RuntimeException e){
+            Map<String,String> errorMap = new HashMap<>();
+            errorMap.put("error","ocorreu uma exceção de tempo de execução");
+            errorMap.put("message","Erro de Formacao na Pagina de Login");
+            errorMap.put("status", "400" );
             System.out.println("Erro de Formacao na Pagina de Login ");
 
         }
         catch(Exception e){
+            Map<String,String> errorMap = new HashMap<>();
+            errorMap.put("error","ocorreu uma exceção de tempo de execução");
+            errorMap.put("message","Erro no servidor, tente novamente mais tarde");
+            errorMap.put("status", "500" );
             System.out.println("Erro no servidor, tente novamente mais tarde");
         }
     }
@@ -57,10 +74,23 @@ public class User {
                 email = "NaN";
             }
             this.password = password;
+            Map<String, String> successMap = new HashMap<>();
+            System.out.println("Conexão bem-sucedida: " + successMap);
+            successMap.put("message", "Usuário cadastrado com sucesso!");
+            successMap.put("status", "200");
+
         } catch (RuntimeException e) {
+            Map<String,String> errorMap = new HashMap<>();
+            errorMap.put("error","ocorreu uma exceção de tempo de execução");
+            errorMap.put("message","Erro de Formacao na Pagina de Login");
+            errorMap.put("status", "400" );
             System.out.println("Erro de Formacao na Pagina de Login ");
         }
         catch(Exception e){
+            Map<String,String> errorMap = new HashMap<>();
+            errorMap.put("error","ocorreu uma exceção de tempo de execução");
+            errorMap.put("message","Erro no servidor, tente novamente mais tarde");
+            errorMap.put("status", "500" );
             System.out.println("Erro no servidor, tente novamente mais tarde");
         }
     }
@@ -86,10 +116,24 @@ public class User {
             this.dayBirthday = dayBirthday;
             this.monthBirthday = monthBirthday;
             this.yearBirthday = yearBirthday;
+
+            Map<String, String> successMap = new HashMap<>();
+            System.out.println("Conexão bem-sucedida: " + successMap);
+            successMap.put("message", "Usuário cadastrado com sucesso!");
+            successMap.put("status", "200");
+
         } catch (RuntimeException e) {
+            Map<String,String> errorMap = new HashMap<>();
+            errorMap.put("error","ocorreu uma exceção de tempo de execução");
+            errorMap.put("message","Erro de Formacao na Pagina de Login");
+            errorMap.put("status", "400" );
             System.out.println("Erro de Formacao na Pagina de Login ");
         }
         catch (Exception e){
+            Map<String,String> errorMap = new HashMap<>();
+            errorMap.put("error","ocorreu uma exceção de tempo de execução");
+            errorMap.put("message","Erro no servidor, tente novamente mais tarde");
+            errorMap.put("status", "500" );
             System.out.println("Erro no servidor, tente novamente mais tarde");
         }
     }
