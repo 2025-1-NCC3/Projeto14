@@ -33,6 +33,9 @@ android {
 
 dependencies {
 
+
+    implementation "com.mapbox.navigation:android:2.15.2"
+
     implementation libs.appcompat
     implementation libs.material
     implementation libs.constraintlayout
