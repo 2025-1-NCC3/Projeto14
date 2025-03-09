@@ -75,8 +75,9 @@ public class RegisterPassengerActivity extends AppCompatActivity {
             public void onResponse(Call<User> call, Response<User> response) {
                 if(response.isSuccessful()){
                     Toast.makeText(getApplicationContext(),"Usuário cadastrado com sucesso!", Toast.LENGTH_LONG);
-                    SystemAtributes.user = user;
+                    SystemAtributes.user = response.body();
                     changeActivity(0);
+                    finish();
                 }else{
                     Toast.makeText(getApplicationContext(),"Falha ao cadastrar usuário!", Toast.LENGTH_LONG);
                 }

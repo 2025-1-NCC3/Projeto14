@@ -13,4 +13,16 @@ public interface ApiService {
     Call<User> registerDriver(@Body User user);
     @POST("registerPassenger")
     Call<User> registerPassenger(@Body User user);
+
+    @POST("updateUserDriver")
+    Call<User> updateUserDriver(@Body User user);
+
+    @POST("updateUserPassenger")
+    Call<User> updateUserPassenger(@Body User user);
+
+    @POST("deleteUserDriver")
+    Call<User> deleteUserDriver(@Body User user);
+
+    @POST("deleteUserPassenger")
+    Call<User> deleteUserPassenger(@Body User user);
 }

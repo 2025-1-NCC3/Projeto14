@@ -28,24 +28,26 @@
         </activity>
         <activity
             android:name=".ui.userSign.ChooseAccountActivity"
-            android:exported="true"
+            android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.SecurityVoice2" />
+            />
         <activity
             android:name=".ui.userSign.RegisterPassengerActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.SecurityVoice2"
+
             />
         <activity
             android:name=".ui.userSign.RegisterDriverActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.SecurityVoice2" />
+            />
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            >
+        </activity>
 
     </application>
 

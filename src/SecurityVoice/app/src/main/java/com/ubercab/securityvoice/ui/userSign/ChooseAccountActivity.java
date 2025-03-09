@@ -33,6 +33,7 @@ public class ChooseAccountActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), RegisterDriverActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -41,6 +42,7 @@ public class ChooseAccountActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), RegisterPassengerActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
     }

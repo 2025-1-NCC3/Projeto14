@@ -1,21 +1,21 @@
 package com.ubercab.entities;
 
 public class User {
-    private int id;
-    private String name;
-    private String lastName;
-    private String email;
-    private String phoneNumber;
-    private String password;
-    private String cpf;
-    private String rg;
-    private String gender;
+    private int id = 0;
+    private String name = "NaN";
+    private String lastName = "NaN";
+    private String email = "NaN";
+    private String phoneNumber = "NaN";
+    private String password = "NaN";
+    private String cpf = "NaN";
+    private String rg = "NaN";
+    private String gender = "NaN";
 
-    private int dayBirthday;
-    private String monthBirthday;
-    private int yearBirthday;
+    private int dayBirthday = 0;
+    private String monthBirthday = "NaN";
+    private int yearBirthday = 0;
 
-    public User(String str, String pas) {
+    public User(String str, String pas) { //Construtor da operação de Login
         String[] filter = str.split("@");//Auxilia na identificação da diferença entre número de telefone e usuário inserido no mainIdentificator
 
         if(filter.length > 1){//Pega registro do usuário pelo e-mail
@@ -35,7 +35,7 @@ public class User {
         gender="NaN";
     }
 
-    public User(String name, String lastName, String str, String password) {
+    public User(String name, String lastName, String str, String password) { //Construtor da operação de Cadastro de Passageiro
         this.name = name;
         this.lastName = lastName;
         String[] filter = str.split("@");//Auxilia na identificação da diferença entre número de telefone e usuário inserido no mainIdentificator
@@ -50,7 +50,17 @@ public class User {
         this.password = password;
     }
 
-    public User(String name, String lastName, String str, String password, String cpf, String rg, String gender, int dayBirthday, String monthBirthday, int yearBirthday) {
+    public User(int id, String name, String lastName, String email, String phoneNumber, String password) {
+        this.id = id;
+        this.name = name;
+        this.lastName = lastName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.password = password;
+    }
+
+    public User(String name, String lastName, String str, String password, String cpf,
+                String rg, String gender, int dayBirthday, String monthBirthday, int yearBirthday) { // Construtor da operação de cadastro de Motorista
         this.name = name;
         this.lastName = lastName;
         String[] filter = str.split("@");//Auxilia na identificação da diferença entre número de telefone e usuário inserido no mainIdentificator
