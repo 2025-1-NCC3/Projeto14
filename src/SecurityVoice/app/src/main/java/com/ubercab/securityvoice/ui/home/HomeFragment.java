@@ -121,8 +121,8 @@ public class HomeFragment extends Fragment {
             routeLineApi.setNavigationRoutes(routesUpdatedResult.getNavigationRoutes(), new MapboxNavigationConsumer<Expected<RouteLineError, RouteSetValue>>() {
                 @Override
                 public void accept(Expected<RouteLineError, RouteSetValue> routeLineErrorRouteSetValueExpected) {
-                    Style style = mapView.getMapboxMap().getStyle();
-                    if (style != null) {
+                    Style style = mapView != null ? mapView.getMapboxMap().getStyle() : null;
+                    if (style != null && style.isValid()) {
                         routeLineView.renderRouteDrawData(style, routeLineErrorRouteSetValueExpected);
                     }
                 }
@@ -319,16 +319,24 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mapboxNavigation.onDestroy();
-        mapboxNavigation.unregisterRoutesObserver(routesObserver);
-        mapboxNavigation.unregisterLocationObserver(locationObserver);
-    }
-
-    @Override
     public void onDestroyView() {
         super.onDestroyView();
+
+        if (routeLineView != null) {
+            routeLineView.cancel();
+            routeLineView = null;
+        }
+        if (routeLineApi != null) {
+            routeLineApi.cancel();
+            routeLineApi = null;
+        }
+
+        if (mapboxNavigation != null) {
+            mapboxNavigation.unregisterRoutesObserver(routesObserver);
+            mapboxNavigation.unregisterLocationObserver(locationObserver);
+            mapboxNavigation.onDestroy();
+        }
+
         binding = null;
     }
 }
