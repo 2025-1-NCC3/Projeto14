@@ -134,7 +134,7 @@ public class HomeFragment extends Fragment {
     private MapboxNavigation mapboxNavigation;
     private void updateCamera(Point point, Double bearing) {
         MapAnimationOptions animationOptions = new MapAnimationOptions.Builder().duration(1500L).build();
-        CameraOptions cameraOptions = new CameraOptions.Builder().center(point).zoom(14.0).bearing(bearing).pitch(45.0)
+        CameraOptions cameraOptions = new CameraOptions.Builder().center(point).zoom(20.0).bearing(bearing).pitch(45.0)
                 .padding(new EdgeInsets(1000.0, 0.0, 0.0, 0.0)).build();
 
         getCamera(mapView).easeTo(cameraOptions, animationOptions);
@@ -226,7 +226,7 @@ public class HomeFragment extends Fragment {
         mapView.getMapboxMap().loadStyleUri(Style.DARK, new Style.OnStyleLoaded() {
             @Override
             public void onStyleLoaded(@NonNull Style style) {
-                mapView.getMapboxMap().setCamera(new CameraOptions.Builder().zoom(14.0).build());
+                mapView.getMapboxMap().setCamera(new CameraOptions.Builder().zoom(20.0).build());
                 locationComponentPlugin.setEnabled(true);
                 locationComponentPlugin.setLocationProvider(navigationLocationProvider);
                 getGestures(mapView).addOnMoveListener(onMoveListener);
