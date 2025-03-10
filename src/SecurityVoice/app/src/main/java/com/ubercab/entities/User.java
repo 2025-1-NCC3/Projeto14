@@ -1,0 +1,185 @@
+package com.ubercab.entities;
+
+public class User {
+    private int id = 0;
+    private String name = "NaN";
+    private String lastName = "NaN";
+    private String email = "NaN";
+    private String phoneNumber = "NaN";
+    private String password = "NaN";
+    private String cpf = "NaN";
+    private String rg = "NaN";
+    private String gender = "NaN";
+
+    private int dayBirthday = 0;
+    private String monthBirthday = "NaN";
+    private int yearBirthday = 0;
+
+    public User(String str, String pas) { //Construtor da operação de Login
+        String[] filter = str.split("@");//Auxilia na identificação da diferença entre número de telefone e usuário inserido no mainIdentificator
+
+        if(filter.length > 1){//Pega registro do usuário pelo e-mail
+            email = str;
+            phoneNumber = "NaN";
+        }else{//Pega registro do usuário pelo número de telefone
+            phoneNumber = str;
+            email = "NaN";
+        }
+        password = pas;
+
+        id = 0;
+        name="NaN";
+        lastName="NaN";
+        cpf="NaN";
+        rg="NaN";
+        gender="NaN";
+    }
+
+    public User(String name, String lastName, String str, String password) { //Construtor da operação de Cadastro de Passageiro
+        this.name = name;
+        this.lastName = lastName;
+        String[] filter = str.split("@");//Auxilia na identificação da diferença entre número de telefone e usuário inserido no mainIdentificator
+
+        if(filter.length > 1){//Pega registro do usuário pelo e-mail
+            email = str;
+            phoneNumber = "NaN";
+        }else{//Pega registro do usuário pelo número de telefone
+            phoneNumber = str;
+            email = "NaN";
+        }
+        this.password = password;
+    }
+
+    public User(int id, String name, String lastName, String email, String phoneNumber, String password) {
+        this.id = id;
+        this.name = name;
+        this.lastName = lastName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.password = password;
+    }
+
+    public User(String name, String lastName, String str, String password, String cpf,
+                String rg, String gender, int dayBirthday, String monthBirthday, int yearBirthday) { // Construtor da operação de cadastro de Motorista
+        this.name = name;
+        this.lastName = lastName;
+        String[] filter = str.split("@");//Auxilia na identificação da diferença entre número de telefone e usuário inserido no mainIdentificator
+
+        if(filter.length > 1){//Pega registro do usuário pelo e-mail
+            email = str;
+            phoneNumber = "NaN";
+        }else{//Pega registro do usuário pelo número de telefone
+            phoneNumber = str;
+            email = "NaN";
+        }
+        this.password = password;
+        this.cpf = cpf;
+        this.rg = rg;
+        this.gender = gender;
+        this.dayBirthday = dayBirthday;
+        this.monthBirthday = monthBirthday;
+        this.yearBirthday = yearBirthday;
+
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getRg() {
+        return rg;
+    }
+
+    public void setRg(String rg) {
+        this.rg = rg;
+    }
+
+    public int getDayBirthday() {
+        return dayBirthday;
+    }
+
+    public void setDayBirthday(int dayBirthday) {
+        this.dayBirthday = dayBirthday;
+    }
+
+    public String getMonthBirthday() {
+        return monthBirthday;
+    }
+
+    public void setMonthBirthday(String monthBirthday) {
+        this.monthBirthday = monthBirthday;
+    }
+
+    public int getYearBirthday() {
+        return yearBirthday;
+    }
+
+    public void setYearBirthday(int yearBirthday) {
+        this.yearBirthday = yearBirthday;
+    }
+
+    @Override
+    public String toString(){
+        return getName() + ", " + getLastName() + ", " + getEmail() + ", " +getPhoneNumber() + ", " +getPassword() + ", " +getCpf() + ", " +getRg() + ", " +getGender() + ", " +getDayBirthday() + ", " +getMonthBirthday() + ", " +getYearBirthday();
+    }
+}

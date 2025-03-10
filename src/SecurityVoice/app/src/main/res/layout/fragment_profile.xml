@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="visible"
+    tools:context=".ui.system.ProfileFragment"
+    tools:visibility="visible">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/nameProfile"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="30dp"
+            android:text="NOME DO USUÁRIO"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/photoProfile"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/photoProfile"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+
+            android:src="@drawable/baseline_person_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+             />
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/photoProfile">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/profileActivityButton"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@drawable/usersign_chooseaccountbutton"
+                android:drawableStart="@drawable/baseline_directions_car_24"
+                android:drawableEnd="@drawable/baseline_arrow_forward_ios_24"
+                android:drawablePadding="10dp"
+                android:outlineSpotShadowColor="@color/white"
+                android:text="@string/profile_profileActivity"
+                android:textAlignment="textStart"
+                android:textStyle="bold" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/profileInformationButton"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@drawable/usersign_chooseaccountbutton"
+                android:drawableStart="@drawable/baseline_class_24"
+                android:drawableEnd="@drawable/baseline_arrow_forward_ios_24"
+                android:drawablePadding="10dp"
+                android:outlineSpotShadowColor="@color/white"
+                android:text="@string/profile_profileInformations"
+                android:textAlignment="textStart"
+                android:textStyle="bold"
+                android:onClick="accountInformationButton"
+                />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/profileConfigurationButton"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@drawable/usersign_chooseaccountbutton"
+                android:drawableStart="@drawable/baseline_manage_accounts_24"
+                android:drawableEnd="@drawable/baseline_arrow_forward_ios_24"
+                android:drawablePadding="10dp"
+                android:outlineSpotShadowColor="@color/white"
+                android:text="@string/profile_profileConfigurations"
+                android:textAlignment="textStart"
+                android:textStyle="bold" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/profileExitButton"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@drawable/usersign_chooseaccountbutton"
+                android:drawableStart="@drawable/baseline_exit_to_app_24"
+                android:drawableEnd="@drawable/baseline_arrow_forward_ios_24"
+                android:drawablePadding="10dp"
+                android:outlineSpotShadowColor="@color/white"
+                android:text="@string/profile_profileExit"
+                android:textAlignment="textStart"
+                android:textStyle="bold"
+                android:onClick="exitButton"/>
+
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>
