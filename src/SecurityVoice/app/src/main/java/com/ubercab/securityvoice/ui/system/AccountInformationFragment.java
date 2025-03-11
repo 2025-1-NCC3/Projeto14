@@ -19,6 +19,9 @@ import android.widget.Toast;
 import com.google.android.material.textfield.TextInputEditText;
 import com.ubercab.entities.SystemAtributes;
 import com.ubercab.entities.User;
+import com.ubercab.exceptions.LengthCPFException;
+import com.ubercab.exceptions.LengthPhoneNumberException;
+import com.ubercab.exceptions.LengthRGException;
 import com.ubercab.securityvoice.MainActivity;
 import com.ubercab.securityvoice.R;
 import com.ubercab.securityvoice.ui.userSign.LoginActivity;
@@ -75,59 +78,87 @@ public class AccountInformationFragment extends Fragment {
             updateButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-                    User user = SystemAtributes.user;
-                    User userOriginal = new User(user.getName(),user.getLastName(),
-                            user.getEmail(),user.getPhoneNumber(),user.getPassword(),
-                            user.getCpf(),user.getRg(), user.getDayBirthday(),user.getMonthBirthday(),
-                            user.getYearBirthday());
-                    userOriginal.setId(user.getId());
-
-                    user.setName(profileNameEditText.getText().toString());
-                    user.setLastName(profileLastNameEditText.getText().toString());
-                    user.setCpf(profileCpfEditText.getText().toString());
-                    user.setRg(profileRgEditText.getText().toString());
-
-                    user.setDayBirthday(Integer.parseInt(dayDateSpinner.getSelectedItem().toString()));
-                    user.setMonthBirthday(monthDateSpinner.getSelectedItem().toString());
-                    user.setYearBirthday(Integer.parseInt(yearDateSpinner.getSelectedItem().toString()));
-
-                    if(maleRadioButton.isChecked()){
-                        user.setGender("male");
-                    }else{
-                        user.setGender("female");
-                    }
-
-                    String[] filter = mainIdentificatorEditText.getText().toString().split("@");//Auxilia na identificação da diferença entre número de telefone e usuário inserido no mainIdentificator
-
-                    if(filter.length > 1){//Para alterar o e-mail
-                        user.setEmail(mainIdentificatorEditText.getText().toString());
-                    }else{//Para alterar o número de telefone
-                        user.setPhoneNumber(mainIdentificatorEditText.getText().toString());
-                    }
-
-                    user.setPassword(passwordEditText.getText().toString());
-
-                    Call<User> call = SystemAtributes.apiService.updateUserDriver(user);
-
-                    call.enqueue(new Callback<User>() {
-                        @Override
-                        public void onResponse(Call<User> call, Response<User> response) {
-                            if(response.isSuccessful()){
-                                Toast.makeText(getActivity().getApplicationContext(), "Usuário atualizado com sucesso!",Toast.LENGTH_LONG).show();
-                            }else{
-                                Toast.makeText(getActivity().getApplicationContext(), "Falha ao atualizar usuário!",Toast.LENGTH_LONG).show();
-                                SystemAtributes.user = userOriginal;
-                                updateRegisterUserDriver(view);
+                    try{
+                        String UserPhoneNumber = mainIdentificatorEditText.getText().toString();
+                        String[] Fil = mainIdentificatorEditText.getText().toString().split("@");
+                        String UserCPF = profileCpfEditText.getText().toString();
+                        String UserRG = profileRgEditText.getText().toString();
+                        if(Fil.length == 1){
+                            if(UserPhoneNumber.length() != 11 || UserPhoneNumber.length() != 12){
+                                throw new LengthPhoneNumberException("Numero invalido");
                             }
                         }
-
-                        @Override
-                        public void onFailure(Call<User> call, Throwable throwable) {
-                            Toast.makeText(getActivity().getApplicationContext(), "Erro: Servidor não responde",Toast.LENGTH_LONG).show();
-                            SystemAtributes.user = userOriginal;
+                        if(UserCPF.length() != 11){
+                            throw new LengthCPFException("CPF invalido");
                         }
-                    });
+                        if(UserRG.length() <= 7 || UserRG.length() >=12 ){
+                            throw new LengthRGException("RG incalido");
+                        }
+
+
+                        User user = SystemAtributes.user;
+                        User userOriginal = new User(user.getName(),user.getLastName(),
+                                user.getEmail(),user.getPhoneNumber(),user.getPassword(),
+                                user.getCpf(),user.getRg(), user.getDayBirthday(),user.getMonthBirthday(),
+                                user.getYearBirthday());
+                        userOriginal.setId(user.getId());
+
+                        user.setName(profileNameEditText.getText().toString());
+                        user.setLastName(profileLastNameEditText.getText().toString());
+                        user.setCpf(profileCpfEditText.getText().toString());
+                        user.setRg(profileRgEditText.getText().toString());
+
+                        user.setDayBirthday(Integer.parseInt(dayDateSpinner.getSelectedItem().toString()));
+                        user.setMonthBirthday(monthDateSpinner.getSelectedItem().toString());
+                        user.setYearBirthday(Integer.parseInt(yearDateSpinner.getSelectedItem().toString()));
+
+                        if(maleRadioButton.isChecked()){
+                            user.setGender("male");
+                        }else{
+                            user.setGender("female");
+                        }
+
+                        String[] filter = mainIdentificatorEditText.getText().toString().split("@");//Auxilia na identificação da diferença entre número de telefone e usuário inserido no mainIdentificator
+
+                        if(filter.length > 1){//Para alterar o e-mail
+                            user.setEmail(mainIdentificatorEditText.getText().toString());
+                        }else{//Para alterar o número de telefone
+
+                            user.setPhoneNumber(mainIdentificatorEditText.getText().toString());
+                        }
+
+                        user.setPassword(passwordEditText.getText().toString());
+
+                        Call<User> call = SystemAtributes.apiService.updateUserDriver(user);
+
+                        call.enqueue(new Callback<User>() {
+                            @Override
+                            public void onResponse(Call<User> call, Response<User> response) {
+                                if(response.isSuccessful()){
+                                    Toast.makeText(getActivity().getApplicationContext(), "Usuário atualizado com sucesso!",Toast.LENGTH_LONG).show();
+                                }else{
+                                    Toast.makeText(getActivity().getApplicationContext(), "Falha ao atualizar usuário!",Toast.LENGTH_LONG).show();
+                                    SystemAtributes.user = userOriginal;
+                                    updateRegisterUserDriver(view);
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<User> call, Throwable throwable) {
+                                Toast.makeText(getActivity().getApplicationContext(), "Erro: Servidor não responde",Toast.LENGTH_LONG).show();
+                                SystemAtributes.user = userOriginal;
+                            }
+                        });
+                    }catch(LengthPhoneNumberException e){
+                        Toast.makeText(getActivity().getApplicationContext(), "Numero de Celular invalido", Toast.LENGTH_SHORT).show();
+
+                    }
+                    catch(LengthCPFException e){
+                        Toast.makeText(getActivity().getApplicationContext(), "CPF invalido", Toast.LENGTH_SHORT).show();
+                    }
+                    catch(LengthRGException e){
+                        Toast.makeText(getActivity().getApplicationContext(), "RG invalido", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
 
@@ -156,44 +187,54 @@ public class AccountInformationFragment extends Fragment {
 
                 @Override
                 public void onClick(View v) {
-                    User user = SystemAtributes.user;
-                    User userOriginal = new User(user.getId(),user.getName(),user.getLastName(),
-                            user.getEmail(),user.getPhoneNumber(),user.getPassword());
+                    try {
+                        String UserPhoneNumber = mainIdentificatorProfile.getText().toString();
+                        String[] Fil = mainIdentificatorProfile.getText().toString().split("@");
 
-
-                    user.setName(profileNameEditText.getText().toString());
-                    user.setLastName(profileLastNameEditText.getText().toString());
-
-                    String[] filter = mainIdentificatorProfile.getText().toString().split("@");//Auxilia na identificação da diferença entre número de telefone e usuário inserido no mainIdentificator
-
-                    if(filter.length > 1){//Para alterar o e-mail
-                        user.setEmail(mainIdentificatorProfile.getText().toString());
-                    }else{//Para alterar o número de telefone
-                        user.setPhoneNumber(mainIdentificatorProfile.getText().toString());
-                    }
-
-                    user.setPassword(passwordProfile.getText().toString());
-
-                    Call<User> call = SystemAtributes.apiService.updateUserPassenger(user);
-
-                    call.enqueue(new Callback<User>() {
-                        @Override
-                        public void onResponse(Call<User> call, Response<User> response) {
-                            if(response.isSuccessful()){
-                                Toast.makeText(getActivity().getApplicationContext(), "Usuário atualizado com sucesso!",Toast.LENGTH_LONG).show();
-                            }else{
-                                Toast.makeText(getActivity().getApplicationContext(), "Falha ao atualizar usuário!",Toast.LENGTH_LONG).show();
-                                SystemAtributes.user = userOriginal;
-                                updateRegisterUserPassenger(view);
+                        if (Fil.length == 1) {
+                            if (UserPhoneNumber.length() != 11 || UserPhoneNumber.length() != 12) {
+                                throw new LengthPhoneNumberException("Numero de Celular invalido");
                             }
                         }
+                        User user = SystemAtributes.user;
+                        User userOriginal = new User(user.getId(),user.getName(),user.getLastName(),user.getEmail(),user.getPhoneNumber(),user.getPassword());
 
-                        @Override
-                        public void onFailure(Call<User> call, Throwable throwable) {
-                            Toast.makeText(getActivity().getApplicationContext(), "Erro: Servidor não responde",Toast.LENGTH_LONG).show();
-                            SystemAtributes.user = userOriginal;
+                        user.setName(profileNameEditText.getText().toString());
+                        user.setLastName(profileLastNameEditText.getText().toString());
+
+                        String[] filter = mainIdentificatorProfile.getText().toString().split("@");//Auxilia na identificação da diferença entre número de telefone e usuário inserido no mainIdentificator
+
+                        if (filter.length > 1) {//Para alterar o e-mail
+                            user.setEmail(mainIdentificatorProfile.getText().toString());
+                        } else {//Para alterar o número de telefone
+                            user.setPhoneNumber(mainIdentificatorProfile.getText().toString());
                         }
-                    });
+
+                        user.setPassword(passwordProfile.getText().toString());
+
+                        Call<User> call = SystemAtributes.apiService.updateUserPassenger(user);
+
+                        call.enqueue(new Callback<User>() {
+                            @Override
+                            public void onResponse(Call<User> call, Response<User> response) {
+                                if (response.isSuccessful()) {
+                                    Toast.makeText(getActivity().getApplicationContext(), "Usuário atualizado com sucesso!", Toast.LENGTH_LONG).show();
+                                } else {
+                                    Toast.makeText(getActivity().getApplicationContext(), "Falha ao atualizar usuário!", Toast.LENGTH_LONG).show();
+                                    SystemAtributes.user = userOriginal;
+                                    updateRegisterUserPassenger(view);
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<User> call, Throwable throwable) {
+                                Toast.makeText(getActivity().getApplicationContext(), "Erro: Servidor não responde", Toast.LENGTH_LONG).show();
+                                SystemAtributes.user = userOriginal;
+                            }
+                        });
+                    }catch (LengthPhoneNumberException e){
+                        Toast.makeText(getActivity().getApplicationContext(), "Numero de celular invalido", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
 

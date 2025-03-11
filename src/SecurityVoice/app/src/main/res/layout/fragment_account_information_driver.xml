@@ -71,7 +71,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/login_edittexttemplate"
-                android:hint="@string/registerDriver_cpfEditText" />
+                android:hint="@string/registerDriver_cpfEditText"
+                android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -88,7 +89,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/login_edittexttemplate"
-                android:hint="@string/registerDriver_rgEditText" />
+                android:hint="@string/registerDriver_rgEditText"
+                android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Spinner
@@ -210,7 +212,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/login_edittexttemplate"
-                android:hint="@string/registerDriver_password" />
+                android:hint="@string/registerDriver_password"
+                android:inputType="text|textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.appcompat.widget.AppCompatButton

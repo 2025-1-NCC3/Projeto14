@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         securityMenu = navView.getMenu().findItem(R.id.navigation_security);
         profileMenu = navView.getMenu().findItem(R.id.navigation_profile);
 
-        //SystemAtributes.user = new User("Barrigudo", "da Silva", "barrigudo@gmail.com","1234",null,"628947070","male",10,"Fevereiro",1915);
+        SystemAtributes.user = new User("Barrigudo", "da Silva", "barrigudo@gmail.com","1234","123","628947070","male",10,"Fevereiro",1915);
 
         travelMenu.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override

@@ -93,7 +93,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/login_edittexttemplate"
-                android:hint="@string/registerDriver_password" />
+                android:hint="@string/registerDriver_password"
+                android:inputType="text|textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.appcompat.widget.AppCompatButton
