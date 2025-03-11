@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Security Voice</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_travel">Viajar</string>
+    <string name="title_security">Segurança</string>
+    <string name="title_profile">Perfil</string>
 
     <string name="userSign_question">Quem é você?</string>
     <string name="userSign_respMot">Motorista</string>
@@ -212,4 +212,13 @@
         <item>2025</item>
     </string-array>
 
+    <string name="profile_profileInformations">Informações da Conta</string>
+    <string name="profile_profileActivity">Atividade</string>
+    <string name="profile_profileConfigurations">Configurações</string>
+    <string name="profile_profileExit">Sair</string>
+
+    <string name="profile_AccountInformation_Title">Registro de Usuário</string>
+    <string name="profile_AccountInformation_cancelButton">Voltar</string>
+    <string name="profile_AccountInformation_updateButton">Atualizar</string>
+    <string name="profile_AccountInformation_deleteButton">Deletar Conta</string>
 </resources>
