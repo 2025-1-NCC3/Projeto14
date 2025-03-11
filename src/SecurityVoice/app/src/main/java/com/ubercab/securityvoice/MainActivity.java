@@ -35,10 +35,6 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private MenuItem travelMenu, securityMenu, profileMenu;
 
-    public MainActivity(){
-
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         transaction.replace(R.id.nav_host_fragment_activity_main,fragment);
+
         transaction.commit();
     }
 
