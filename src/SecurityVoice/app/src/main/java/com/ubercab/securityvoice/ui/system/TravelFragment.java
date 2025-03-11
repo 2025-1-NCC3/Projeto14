@@ -13,11 +13,6 @@ import com.ubercab.securityvoice.R;
 
 public class TravelFragment extends Fragment {
 
-
-    public TravelFragment() {
-        // Required empty public constructor
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
