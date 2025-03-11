@@ -16,6 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.textfield.TextInputEditText;
 import com.ubercab.entities.SystemAtributes;
 import com.ubercab.entities.User;
+import com.ubercab.exceptions.LengthPhoneNumberException;
 import com.ubercab.securityvoice.MainActivity;
 import com.ubercab.securityvoice.R;
 
@@ -49,13 +50,27 @@ public class RegisterPassengerActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                User user = new User(
-                        passengerNameEditText.getText().toString(),
-                        passengerLastNameEditText.getText().toString(),
-                        mainIdentificatorRegisterPassenger.getText().toString(),
-                        passwordRegisterPassenger.getText().toString()
-                );
-                registerPassenger(user);
+                try {
+                    String passengerName = passengerNameEditText.getText().toString();
+                    String passengerLastName = passengerLastNameEditText.getText().toString();
+                    String passengerMainIdentificatorRegister = mainIdentificatorRegisterPassenger.getText().toString();
+                    String passengerPassword = passwordRegisterPassenger.getText().toString();
+                    String[] filter = passengerMainIdentificatorRegister.split("@");
+
+                    if (filter.length == 1) {
+                        if (passengerMainIdentificatorRegister.length() != 11 && passengerMainIdentificatorRegister.length() != 12) {
+                            throw new LengthPhoneNumberException("Número de celular inválid");
+                        }
+                    }
+
+
+                    User user = new User(
+                            passengerName, passengerLastName, passengerPassword, passengerMainIdentificatorRegister
+                    );
+                    registerPassenger(user);
+                }catch(LengthPhoneNumberException e){
+                    Toast.makeText(getApplicationContext(),"Numero de celular inválido",Toast.LENGTH_LONG).show();
+                }
             }
         });
 

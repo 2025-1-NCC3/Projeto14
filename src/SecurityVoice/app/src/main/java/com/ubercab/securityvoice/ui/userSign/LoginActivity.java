@@ -19,6 +19,7 @@ import retrofit2.Response;
 import com.google.android.material.textfield.TextInputEditText;
 import com.ubercab.entities.SystemAtributes;
 import com.ubercab.entities.User;
+import com.ubercab.exceptions.LengthPhoneNumberException;
 import com.ubercab.securityvoice.MainActivity;
 import com.ubercab.securityvoice.R;
 
@@ -51,10 +52,22 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                User user = new User(mainIdentificadorLogin.getText().toString(),
-                        passwordLogin.getText().toString());
-                getLoginUser(user);
+                String mainIdentificator = mainIdentificadorLogin.getText().toString();
+                String password = passwordLogin.getText().toString();
+                //Tratando a exceção de login
+                String[] filter = mainIdentificator.split("@");
+                try {
+                    if (filter.length == 1) {
+                        if (mainIdentificator.length() != 12 && mainIdentificadorLogin.length() != 11) {
+                            throw new LengthPhoneNumberException("Número de Celular Inválido");
+                        }
+                    }
 
+                    User user = new User(mainIdentificator, password);
+                    getLoginUser(user);
+                }catch(LengthPhoneNumberException e){
+                    Toast.makeText(getApplicationContext(), "Número de Celular Inválido",Toast.LENGTH_LONG).show();
+                }
             }
         });
         registerButton.setOnClickListener(new View.OnClickListener(){

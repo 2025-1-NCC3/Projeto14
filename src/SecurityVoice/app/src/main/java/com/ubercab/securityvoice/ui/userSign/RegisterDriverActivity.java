@@ -19,6 +19,9 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.ubercab.entities.SystemAtributes;
 import com.ubercab.entities.User;
+import com.ubercab.exceptions.LengthCPFException;
+import com.ubercab.exceptions.LengthPhoneNumberException;
+import com.ubercab.exceptions.LengthRGException;
 import com.ubercab.securityvoice.MainActivity;
 import com.ubercab.securityvoice.R;
 
@@ -73,6 +76,18 @@ public class RegisterDriverActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
+
+                String driverName = driverNameEditText.getText().toString();
+                String driverLastName = driverLastNameEditText.getText().toString();
+                String driverMainIdentificador = mainIdentificatorRegisterDriver.getText().toString();
+                String driverCPF =  driverCPFEditText.getText().toString();
+                String driverRG = driverRGEditText.getText().toString();
+                String[] filter = driverMainIdentificador.split("@");
+                String driverPassword = passwordRegisterDriver.getText().toString();
+                int driverDayDate = Integer.parseInt(dayDateSpinner.getSelectedItem().toString());
+                String driverMouthDate = monthDateSpinner.getSelectedItem().toString();
+                int driverYearDate = Integer.parseInt(yearDateSpinner.getSelectedItem().toString());
+
                 String gender = null;
                 if(maleRadioButton.isChecked()){
                     gender = "male";
@@ -80,20 +95,41 @@ public class RegisterDriverActivity extends AppCompatActivity {
                     gender = "female";
                 }
 
-                User user = new User(
-                    driverNameEditText.getText().toString(),
-                    driverLastNameEditText.getText().toString(),
-                    mainIdentificatorRegisterDriver.getText().toString(),
-                    passwordRegisterDriver.getText().toString(),
-                    driverCPFEditText.getText().toString(),
-                    driverRGEditText.getText().toString(),
-                    gender,
-                    Integer.parseInt(dayDateSpinner.getSelectedItem().toString()),
-                    monthDateSpinner.getSelectedItem().toString(),
-                    Integer.parseInt(yearDateSpinner.getSelectedItem().toString())
-                );
+                try {
+                    if (driverCPF.length() != 11) {
+                        throw new LengthCPFException("CPF inválido");
+                    }
 
-                registerUser(user);
+                    if (driverRG.length() <= 7 || driverRG.length() >= 12) {
+                        throw new LengthRGException("RG inválido");
+                    }
+
+                    if (filter.length == 1) {
+                        if (driverMainIdentificador.length() != 11 && driverMainIdentificador.length() != 12) {
+                            throw new LengthPhoneNumberException("Número de celular inválido");
+                        }
+                    }
+                    User user = new User(
+
+                            driverName,
+                            driverLastName,
+                            driverMainIdentificador,
+                            driverPassword,
+                            driverCPF,
+                            driverRG,
+                            gender,
+                            driverDayDate,
+                            driverMouthDate,
+                            driverYearDate
+                    );
+                    registerUser(user);
+                }catch (LengthCPFException e){
+                    Toast.makeText(getApplicationContext(),"CPF inválido",Toast.LENGTH_LONG).show();
+                }catch (LengthRGException e){
+                    Toast.makeText(getApplicationContext(), "RG inválido", Toast.LENGTH_SHORT).show();
+                }catch(LengthPhoneNumberException e){
+                    Toast.makeText(getApplicationContext(), "Número de celular inválido", Toast.LENGTH_SHORT).show();
+                }
 
             }
         });

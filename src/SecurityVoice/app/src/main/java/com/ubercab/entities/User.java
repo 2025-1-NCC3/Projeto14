@@ -18,6 +18,7 @@ public class User {
     public User(String str, String pas) { //Construtor da operação de Login
         String[] filter = str.split("@");//Auxilia na identificação da diferença entre número de telefone e usuário inserido no mainIdentificator
 
+
         if(filter.length > 1){//Pega registro do usuário pelo e-mail
             email = str;
             phoneNumber = "NaN";
