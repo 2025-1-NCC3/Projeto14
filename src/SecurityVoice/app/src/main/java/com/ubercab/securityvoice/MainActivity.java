@@ -42,44 +42,11 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.nav_view);
 
-        travelMenu = navView.getMenu().findItem(R.id.navigation_travel);
-        securityMenu = navView.getMenu().findItem(R.id.navigation_security);
-        profileMenu = navView.getMenu().findItem(R.id.navigation_profile);
+        NavController navController = Navigation.findNavController(MainActivity.this, R.id.nav_host_fragment_activity_main);
 
-        //SystemAtributes.user = new User("Barrigudo", "da Silva", "barrigudo@gmail.com","1234",null,"628947070","male",10,"Fevereiro",1915);
-
-        travelMenu.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(@NonNull MenuItem item) {
-
-                changeFragment(new TravelFragment());
-
-                return false;
-            }
-        });
-
-        securityMenu.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(@NonNull MenuItem item) {
-
-
-
-                return false;
-            }
-        });
-
-
-
-        profileMenu.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(@NonNull MenuItem item) {
-
-                changeFragment(new ProfileFragment());
-                return false;
-            }
-        });
+        NavigationUI.setupWithNavController(bottomNavigationView, navController);
 
 
     }
