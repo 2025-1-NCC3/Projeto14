@@ -13,6 +13,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,10 +27,11 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
+
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.mapbox.android.core.location.LocationEngine;
 import com.mapbox.android.core.location.LocationEngineCallback;
 import com.mapbox.android.core.location.LocationEngineProvider;
@@ -77,6 +80,11 @@ import com.mapbox.navigation.ui.maps.route.line.model.MapboxRouteLineOptions;
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLineError;
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLineResources;
 import com.mapbox.navigation.ui.maps.route.line.model.RouteSetValue;
+import com.mapbox.search.autocomplete.PlaceAutocomplete;
+import com.mapbox.search.autocomplete.PlaceAutocompleteSuggestion;
+import com.mapbox.search.ui.adapter.autocomplete.PlaceAutocompleteUiAdapter;
+import com.mapbox.search.ui.view.CommonSearchViewConfiguration;
+import com.mapbox.search.ui.view.SearchResultsView;
 import com.ubercab.securityvoice.R;
 
 
@@ -85,6 +93,9 @@ import java.util.List;
 import java.util.Objects;
 
 import kotlin.Unit;
+import kotlin.coroutines.Continuation;
+import kotlin.coroutines.CoroutineContext;
+import kotlin.coroutines.EmptyCoroutineContext;
 import kotlin.jvm.functions.Function1;
 
 
@@ -92,11 +103,15 @@ public class TravelFragment extends Fragment {
     private MapView mapView;
     private MaterialButton setRoute;
     private FloatingActionButton focusLocationBtn;
-
     private final NavigationLocationProvider navigationLocationProvider = new NavigationLocationProvider();
 
     private MapboxRouteLineView routeLineView;
     private MapboxRouteLineApi routeLineApi;
+
+    private SearchResultsView searchResultsView;
+    private PlaceAutocompleteUiAdapter placeAutocompleteUiAdapter;
+    private TextInputEditText searchET;
+    private boolean ignoreNextQueryUpdate = false;
 
     private final LocationObserver locationObserver = new LocationObserver() {
         @Override
@@ -120,10 +135,11 @@ public class TravelFragment extends Fragment {
             routeLineApi.setNavigationRoutes(routesUpdatedResult.getNavigationRoutes(), new MapboxNavigationConsumer<Expected<RouteLineError, RouteSetValue>>() {
                 @Override
                 public void accept(Expected<RouteLineError, RouteSetValue> routeLineErrorRouteSetValueExpected) {
-                    Style style = mapView != null ? mapView.getMapboxMap().getStyle() : null;
-                    if (style != null && style.isValid()) {
-                        routeLineView.renderRouteDrawData(style, routeLineErrorRouteSetValueExpected);
-                    }
+                    mapView.getMapboxMap().getStyle(style -> {
+                        if (style.isValid()) {
+                            routeLineView.renderRouteDrawData(style, routeLineErrorRouteSetValueExpected);
+                        }
+                    });
                 }
             });
         }
@@ -195,6 +211,45 @@ public class TravelFragment extends Fragment {
         mapboxNavigation.registerRoutesObserver(routesObserver);
         mapboxNavigation.registerLocationObserver(locationObserver);
 
+        PlaceAutocomplete placeAutocomplete = PlaceAutocomplete.create(getString(R.string.mapbox_access_token));
+        searchET = view.findViewById(R.id.searchET);
+
+        searchResultsView = view.findViewById(R.id.search_results_view);
+        searchResultsView.initialize(new SearchResultsView.Configuration(new CommonSearchViewConfiguration()));
+        placeAutocompleteUiAdapter = new PlaceAutocompleteUiAdapter(searchResultsView, placeAutocomplete, LocationEngineProvider.getBestLocationEngine(requireContext()));
+
+        searchET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (ignoreNextQueryUpdate) {
+                    ignoreNextQueryUpdate = false;
+                } else {
+                    placeAutocompleteUiAdapter.search(charSequence.toString(), new Continuation<Unit>() {
+                        @NonNull
+                        @Override
+                        public CoroutineContext getContext() {
+                            return EmptyCoroutineContext.INSTANCE;
+                        }
+
+                        @Override
+                        public void resumeWith(@NonNull Object o) {
+                            searchResultsView.setVisibility(View.VISIBLE);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
                 activityResultLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
@@ -264,6 +319,44 @@ public class TravelFragment extends Fragment {
                         focusLocationBtn.hide();
                     }
                 });
+                placeAutocompleteUiAdapter.addSearchListener(new PlaceAutocompleteUiAdapter.SearchListener() {
+                    @Override
+                    public void onSuggestionsShown(@NonNull List<PlaceAutocompleteSuggestion> list) {
+
+                    }
+
+                    @Override
+                    public void onSuggestionSelected(@NonNull PlaceAutocompleteSuggestion placeAutocompleteSuggestion) {
+                        ignoreNextQueryUpdate = true;
+                        focusLocation = false;
+                        searchET.setText(placeAutocompleteSuggestion.getName());
+                        searchResultsView.setVisibility(View.GONE);
+
+                        pointAnnotationManager.deleteAll();
+                        PointAnnotationOptions pointAnnotationOptions = new PointAnnotationOptions().withTextAnchor(TextAnchor.CENTER).withIconImage(bitmap)
+                                .withPoint(placeAutocompleteSuggestion.getCoordinate());
+                        pointAnnotationManager.create(pointAnnotationOptions);
+                        updateCamera(placeAutocompleteSuggestion.getCoordinate(), 0.0);
+
+                        setRoute.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                fetchRoute(placeAutocompleteSuggestion.getCoordinate());
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onPopulateQueryClick(@NonNull PlaceAutocompleteSuggestion placeAutocompleteSuggestion) {
+
+                    }
+
+                    @Override
+                    public void onError(@NonNull Exception e) {
+
+                    }
+                });
+
             }
         });
 
