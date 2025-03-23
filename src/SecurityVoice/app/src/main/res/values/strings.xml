@@ -36,9 +36,6 @@
     <string name="registerDriver_registerButton">Cadastrar</string>
     <string name="registerDriver_alreadyHaveAccount">Já tenho uma conta</string>
 
-    <string name="btnBuscarRota">Definir rota</string>
-    <string name="buscandoRota">Buscando rota...</string>
-
     <string-array name="registerDriver_dayDateSpinnerOptions">
         <item>1</item>
         <item>2</item>

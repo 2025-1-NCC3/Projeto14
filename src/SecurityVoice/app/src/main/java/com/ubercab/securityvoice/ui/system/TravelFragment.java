@@ -118,8 +118,7 @@ public class TravelFragment extends Fragment {
     private TextInputEditText searchET; // o campo de texto
     private boolean ignoreNextQueryUpdate = false; // usado para evitar atualizações duplicadas na busca
     private MapboxNavigation mapboxNavigation; // gerencia a navegação do Mapbox
-    boolean focusLocation = true; // Indica se a câmera do mapa deve seguir o usuário.
-    private TextWatcher textWatcher;
+    boolean focusLocation = true; // Indica se a câmera do mapa deve seguir o usuário
 
 
     // Vai ver as mudanças no mapa e atualiza a posição da localização
@@ -189,100 +188,15 @@ public class TravelFragment extends Fragment {
         }
     };
 
-    // Lista de permissões a serem solicitadas
-    private List<String> permissionsToRequest = new ArrayList<>();
-    private int currentPermissionIndex = 0;
-
-    private final ActivityResultLauncher<String> permissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
-        @Override
-        public void onActivityResult(Boolean result) {
-            if (result) {
-                // Permissão concedida, solicite a próxima permissão
-                requestNextPermission();
-            } else {
-                // Permissão negada, exiba uma mensagem ao usuário
-                Toast.makeText(requireContext(), "Permissão negada: " + permissionsToRequest.get(currentPermissionIndex - 1), Toast.LENGTH_SHORT).show();
-                requestNextPermission(); // Continue solicitando as próximas permissões
+    // ActivityResultLauncher para solicitar permissões
+    private ActivityResultLauncher<String> permissionLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(),
+            isGranted -> {
+                if (isGranted) {
+                    Toast.makeText(requireContext(), "Permissão concedida! Reiniciar o app ", Toast.LENGTH_SHORT).show();
+                }
             }
-        }
-    });
-
-    // Método para solicitar a próxima permissão
-    @SuppressLint("MissingPermission")
-    private void requestNextPermission() {
-        if (currentPermissionIndex < permissionsToRequest.size()) {
-            String nextPermission = permissionsToRequest.get(currentPermissionIndex);
-            currentPermissionIndex++;
-            permissionLauncher.launch(nextPermission); // Solicita a próxima permissão
-        } else {
-            // Todas as permissões foram solicitadas, verifique se todas foram concedidas
-            if (checkAllPermissionsGranted()) {
-                // Todas as permissões foram concedidas, inicie a sessão de navegação
-                mapboxNavigation.startTripSession();
-            } else {
-                // Alguma permissão foi negada, informe o usuário
-                Toast.makeText(requireContext(), "Permissões necessárias não foram concedidas", Toast.LENGTH_SHORT).show();
-                redirectToAppSettings(); // Redirecione o usuário para as configurações do app
-            }
-        }
-    }
-
-    // Método para verificar se todas as permissões foram concedidas
-    private boolean checkAllPermissionsGranted() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                return false;
-            }
-        }
-
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return false;
-        }
-
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return false;
-        }
-
-        return true; // Todas as permissões foram concedidas
-    }
-
-    // Método para redirecionar o usuário para as configurações do app
-    private void redirectToAppSettings() {
-        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-        Uri uri = Uri.fromParts("package", requireContext().getPackageName(), null);
-        intent.setData(uri);
-        startActivity(intent);
-    }
-
-    // Método para verificar e solicitar permissões
-    private void checkAndRequestPermissions() {
-        // Limpa a lista de permissões
-        permissionsToRequest.clear();
-        currentPermissionIndex = 0;
-
-        // Verifica e adiciona permissões necessárias à lista
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                permissionsToRequest.add(Manifest.permission.POST_NOTIFICATIONS);
-            }
-        }
-
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            permissionsToRequest.add(Manifest.permission.ACCESS_FINE_LOCATION);
-        }
-
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            permissionsToRequest.add(Manifest.permission.ACCESS_COARSE_LOCATION);
-        }
-
-        // Se houver permissões a serem solicitadas, comece o processo
-        if (!permissionsToRequest.isEmpty()) {
-            requestNextPermission(); // Solicita a primeira permissão
-        } else {
-            // Todas as permissões já foram concedidas, inicie a sessão de navegação
-            mapboxNavigation.startTripSession();
-        }
-    }
+    );
 
 
     // Vai criar a tela e os componentes
@@ -322,7 +236,19 @@ public class TravelFragment extends Fragment {
 
         focusLocationBtn.hide(); // Esconde o botão por padrão
 
-        checkAndRequestPermissions();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+            }
+        }
+
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
+            permissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION);
+        } else {
+            mapboxNavigation.startTripSession();
+        }
 
         setRoute.setOnClickListener(new View.OnClickListener() {
             // Caso o usuário clique sem ter selecionado nenhum ponto no mapa
@@ -369,9 +295,6 @@ public class TravelFragment extends Fragment {
 
         LocationComponentPlugin locationComponentPlugin = getLocationComponent(mapView);
         getGestures(mapView).addOnMoveListener(onMoveListener);
-
-
-
 
         mapView.getMapboxMap().loadStyleUri(Style.DARK, new Style.OnStyleLoaded() {
             @Override
@@ -474,7 +397,7 @@ public class TravelFragment extends Fragment {
             public void onSuccess(LocationEngineResult result) {
                 Location location = result.getLastLocation();
                 setRoute.setEnabled(false);
-                setRoute.setText(R.string.buscandoRota);
+                setRoute.setText("Buscando rotas...");
                 RouteOptions.Builder builder = RouteOptions.builder();
                 Point origin = Point.fromLngLat(Objects.requireNonNull(location).getLongitude(), location.getLatitude());
                 builder.coordinatesList(Arrays.asList(origin, point));
@@ -489,13 +412,13 @@ public class TravelFragment extends Fragment {
                         mapboxNavigation.setNavigationRoutes(list);
                         focusLocationBtn.performClick();
                         setRoute.setEnabled(true);
-                        setRoute.setText(R.string.btnBuscarRota);
+                        setRoute.setText("Definir rotas");
                     }
 
                     @Override
                     public void onFailure(@NonNull List<RouterFailure> list, @NonNull RouteOptions routeOptions) {
                         setRoute.setEnabled(true);
-                        setRoute.setText(R.string.btnBuscarRota);
+                        setRoute.setText("Definir rotas");
                         Toast.makeText(requireContext(), "Route request failed", Toast.LENGTH_SHORT).show();
                     }
 
