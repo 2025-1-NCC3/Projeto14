@@ -8,11 +8,14 @@ import static com.mapbox.navigation.base.extensions.RouteOptionsExtensions.apply
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -88,9 +91,11 @@ import com.mapbox.search.ui.view.SearchResultsView;
 import com.ubercab.securityvoice.R;
 
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+
 
 import kotlin.Unit;
 import kotlin.coroutines.Continuation;
@@ -100,19 +105,24 @@ import kotlin.jvm.functions.Function1;
 
 
 public class TravelFragment extends Fragment {
-    private MapView mapView;
-    private MaterialButton setRoute;
-    private FloatingActionButton focusLocationBtn;
-    private final NavigationLocationProvider navigationLocationProvider = new NavigationLocationProvider();
+    private MapView mapView; // o mapa
+    private MaterialButton setRoute; // botão que vai setar a rota
+    private FloatingActionButton focusLocationBtn; // botão que vai centralizar na localização do usuário
+    private final NavigationLocationProvider navigationLocationProvider = new NavigationLocationProvider(); // O provedor da localização do usuário
 
-    private MapboxRouteLineView routeLineView;
-    private MapboxRouteLineApi routeLineApi;
+    private MapboxRouteLineView routeLineView; // responsável por desenhar a rota no mapa
+    private MapboxRouteLineApi routeLineApi; // Processa a rota e manda para o LineView
 
-    private SearchResultsView searchResultsView;
-    private PlaceAutocompleteUiAdapter placeAutocompleteUiAdapter;
-    private TextInputEditText searchET;
-    private boolean ignoreNextQueryUpdate = false;
+    private SearchResultsView searchResultsView; // vai exibir as sugestões de locais
+    private PlaceAutocompleteUiAdapter placeAutocompleteUiAdapter; // Quem vai gerenciar a pesquisa do usuário
+    private TextInputEditText searchET; // o campo de texto
+    private boolean ignoreNextQueryUpdate = false; // usado para evitar atualizações duplicadas na busca
+    private MapboxNavigation mapboxNavigation; // gerencia a navegação do Mapbox
+    boolean focusLocation = true; // Indica se a câmera do mapa deve seguir o usuário.
+    private TextWatcher textWatcher;
 
+
+    // Vai ver as mudanças no mapa e atualiza a posição da localização
     private final LocationObserver locationObserver = new LocationObserver() {
         @Override
         public void onNewRawLocation(@NonNull Location location) {
@@ -129,14 +139,18 @@ public class TravelFragment extends Fragment {
         }
     };
 
+    // Vai gerenciar as rotas e exibi-las na tela
     private final RoutesObserver routesObserver = new RoutesObserver() {
         @Override
         public void onRoutesChanged(@NonNull RoutesUpdatedResult routesUpdatedResult) {
-            routeLineApi.setNavigationRoutes(routesUpdatedResult.getNavigationRoutes(), new MapboxNavigationConsumer<Expected<RouteLineError, RouteSetValue>>() {
+            routeLineApi.setNavigationRoutes(routesUpdatedResult.getNavigationRoutes(), new MapboxNavigationConsumer<>() {
                 @Override
                 public void accept(Expected<RouteLineError, RouteSetValue> routeLineErrorRouteSetValueExpected) {
                     mapView.getMapboxMap().getStyle(style -> {
+                        // Vai pegar o estilo do mapa e verificar se é valido
                         if (style.isValid()) {
+                            // Vai desenhar a rota
+                            // routeLineErrorRouteSetValueExpected -> o objeto que usado para desenhar a rota ou mandar um erro
                             routeLineView.renderRouteDrawData(style, routeLineErrorRouteSetValueExpected);
                         }
                     });
@@ -145,8 +159,8 @@ public class TravelFragment extends Fragment {
         }
     };
 
-    boolean focusLocation = true;
-    private MapboxNavigation mapboxNavigation;
+
+    // Vai atualizar a câmera para um certo ponto no mapa
     private void updateCamera(Point point, Double bearing) {
         MapAnimationOptions animationOptions = new MapAnimationOptions.Builder().duration(1500L).build();
         CameraOptions cameraOptions = new CameraOptions.Builder().center(point).zoom(20.0).bearing(bearing).pitch(45.0)
@@ -155,6 +169,7 @@ public class TravelFragment extends Fragment {
         getCamera(mapView).easeTo(cameraOptions, animationOptions);
     }
 
+    // Vai detectar quando o usuário mover o mapa e tirar o foco
     private final OnMoveListener onMoveListener = new OnMoveListener() {
         @Override
         public void onMoveBegin(@NonNull MoveGestureDetector moveGestureDetector) {
@@ -174,19 +189,107 @@ public class TravelFragment extends Fragment {
         }
     };
 
-    private final ActivityResultLauncher<String> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
+    // Lista de permissões a serem solicitadas
+    private List<String> permissionsToRequest = new ArrayList<>();
+    private int currentPermissionIndex = 0;
+
+    private final ActivityResultLauncher<String> permissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
         @Override
         public void onActivityResult(Boolean result) {
             if (result) {
-                Toast.makeText(requireContext(), "Permission granted! Restart this app", Toast.LENGTH_SHORT).show();
+                // Permissão concedida, solicite a próxima permissão
+                requestNextPermission();
+            } else {
+                // Permissão negada, exiba uma mensagem ao usuário
+                Toast.makeText(requireContext(), "Permissão negada: " + permissionsToRequest.get(currentPermissionIndex - 1), Toast.LENGTH_SHORT).show();
+                requestNextPermission(); // Continue solicitando as próximas permissões
             }
         }
     });
 
+    // Método para solicitar a próxima permissão
+    @SuppressLint("MissingPermission")
+    private void requestNextPermission() {
+        if (currentPermissionIndex < permissionsToRequest.size()) {
+            String nextPermission = permissionsToRequest.get(currentPermissionIndex);
+            currentPermissionIndex++;
+            permissionLauncher.launch(nextPermission); // Solicita a próxima permissão
+        } else {
+            // Todas as permissões foram solicitadas, verifique se todas foram concedidas
+            if (checkAllPermissionsGranted()) {
+                // Todas as permissões foram concedidas, inicie a sessão de navegação
+                mapboxNavigation.startTripSession();
+            } else {
+                // Alguma permissão foi negada, informe o usuário
+                Toast.makeText(requireContext(), "Permissões necessárias não foram concedidas", Toast.LENGTH_SHORT).show();
+                redirectToAppSettings(); // Redirecione o usuário para as configurações do app
+            }
+        }
+    }
+
+    // Método para verificar se todas as permissões foram concedidas
+    private boolean checkAllPermissionsGranted() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return false;
+        }
+
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return false;
+        }
+
+        return true; // Todas as permissões foram concedidas
+    }
+
+    // Método para redirecionar o usuário para as configurações do app
+    private void redirectToAppSettings() {
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.fromParts("package", requireContext().getPackageName(), null);
+        intent.setData(uri);
+        startActivity(intent);
+    }
+
+    // Método para verificar e solicitar permissões
+    private void checkAndRequestPermissions() {
+        // Limpa a lista de permissões
+        permissionsToRequest.clear();
+        currentPermissionIndex = 0;
+
+        // Verifica e adiciona permissões necessárias à lista
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                permissionsToRequest.add(Manifest.permission.POST_NOTIFICATIONS);
+            }
+        }
+
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            permissionsToRequest.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        }
+
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            permissionsToRequest.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+        }
+
+        // Se houver permissões a serem solicitadas, comece o processo
+        if (!permissionsToRequest.isEmpty()) {
+            requestNextPermission(); // Solicita a primeira permissão
+        } else {
+            // Todas as permissões já foram concedidas, inicie a sessão de navegação
+            mapboxNavigation.startTripSession();
+        }
+    }
+
+
+    // Vai criar a tela e os componentes
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        // Converte o .xml para o java
         View view = inflater.inflate(R.layout.fragment_travel, container, false);
 
 
@@ -194,20 +297,19 @@ public class TravelFragment extends Fragment {
         focusLocationBtn = view.findViewById(R.id.focusLocation);
         setRoute = view.findViewById(R.id.setRoute);
 
-        // Initialize route line view options
-        MapboxRouteLineOptions options = new MapboxRouteLineOptions.Builder(requireContext()).withRouteLineResources(new RouteLineResources.Builder().build())
+        // Configura e estilizar a linha de rota
+        MapboxRouteLineOptions options = new MapboxRouteLineOptions.Builder(requireContext())
+                .withRouteLineResources(new RouteLineResources.Builder().build())
                 .withRouteLineBelowLayerId(LocationComponentConstants.LOCATION_INDICATOR_LAYER).build();
         routeLineView = new MapboxRouteLineView(options);
         routeLineApi = new MapboxRouteLineApi(options);
 
         // Configurar o token de acesso do Mapbox
-        // Crie o NavigationOptions
         NavigationOptions navigationOptions = new NavigationOptions.Builder(requireContext()).accessToken(getString(R.string.mapbox_access_token)).build();
-
-
         MapboxNavigationApp.setup(navigationOptions);
-        mapboxNavigation = new MapboxNavigation(navigationOptions);
 
+        // Vai definir quem vai cuidar das rotas e da localização
+        mapboxNavigation = new MapboxNavigation(navigationOptions);
         mapboxNavigation.registerRoutesObserver(routesObserver);
         mapboxNavigation.registerLocationObserver(locationObserver);
 
@@ -217,6 +319,18 @@ public class TravelFragment extends Fragment {
         searchResultsView = view.findViewById(R.id.search_results_view);
         searchResultsView.initialize(new SearchResultsView.Configuration(new CommonSearchViewConfiguration()));
         placeAutocompleteUiAdapter = new PlaceAutocompleteUiAdapter(searchResultsView, placeAutocomplete, LocationEngineProvider.getBestLocationEngine(requireContext()));
+
+        focusLocationBtn.hide(); // Esconde o botão por padrão
+
+        checkAndRequestPermissions();
+
+        setRoute.setOnClickListener(new View.OnClickListener() {
+            // Caso o usuário clique sem ter selecionado nenhum ponto no mapa
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(requireContext(), "Busque uma localização", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         searchET.addTextChangedListener(new TextWatcher() {
             @Override
@@ -238,7 +352,10 @@ public class TravelFragment extends Fragment {
 
                         @Override
                         public void resumeWith(@NonNull Object o) {
-                            searchResultsView.setVisibility(View.VISIBLE);
+                            requireActivity().runOnUiThread(() -> {
+                                searchResultsView.setVisibility(View.VISIBLE);
+                                setRoute.setVisibility(View.VISIBLE);
+                            });
                         }
                     });
                 }
@@ -250,39 +367,20 @@ public class TravelFragment extends Fragment {
             }
         });
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                activityResultLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
-            }
-        }
-
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            activityResultLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
-            activityResultLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION);
-        } else {
-            mapboxNavigation.startTripSession();
-        }
-
-        focusLocationBtn.hide();
         LocationComponentPlugin locationComponentPlugin = getLocationComponent(mapView);
         getGestures(mapView).addOnMoveListener(onMoveListener);
 
-        setRoute.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(requireContext(), "Please select a location in map", Toast.LENGTH_SHORT).show();
-            }
-        });
+
 
 
         mapView.getMapboxMap().loadStyleUri(Style.DARK, new Style.OnStyleLoaded() {
             @Override
             public void onStyleLoaded(@NonNull Style style) {
-                mapView.getMapboxMap().setCamera(new CameraOptions.Builder().zoom(20.0).build());
-                locationComponentPlugin.setEnabled(true);
-                locationComponentPlugin.setLocationProvider(navigationLocationProvider);
-                getGestures(mapView).addOnMoveListener(onMoveListener);
+                mapView.getMapboxMap().setCamera(new CameraOptions.Builder().zoom(20.0).build()); // configura a câmera
+
+                locationComponentPlugin.setEnabled(true); // habilita o localizador do mapa
+                locationComponentPlugin.setLocationProvider(navigationLocationProvider); // vincula o localizador ao componente que fornece a localizaçãdo do usuário durante a viagem
+                getGestures(mapView).addOnMoveListener(onMoveListener); // adicinar quem vai cuidar da movimentaçao do mapa
                 locationComponentPlugin.updateSettings(new Function1<LocationComponentSettings, Unit>() {
                     @Override
                     public Unit invoke(LocationComponentSettings locationComponentSettings) {
@@ -291,34 +389,29 @@ public class TravelFragment extends Fragment {
                         return null;
                     }
                 });
-                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.location_pin);
-                AnnotationPlugin annotationPlugin = AnnotationPluginImplKt.getAnnotations(mapView);
-                PointAnnotationManager pointAnnotationManager = PointAnnotationManagerKt.createPointAnnotationManager(annotationPlugin, mapView);
+                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.location_pin); // imagem do marcador
+                AnnotationPlugin annotationPlugin = AnnotationPluginImplKt.getAnnotations(mapView); // permiti adicionar marcadores no mapa
+                PointAnnotationManager pointAnnotationManager = PointAnnotationManagerKt.createPointAnnotationManager(annotationPlugin, mapView); // gerencia a criação e remoção de marcadores no mapa
                 addOnMapClickListener(mapView.getMapboxMap(), new OnMapClickListener() {
+                    // Executa quando o usuario clicar na tela
                     @Override
                     public boolean onMapClick(@NonNull Point point) {
-                        pointAnnotationManager.deleteAll();
-                        PointAnnotationOptions pointAnnotationOptions = new PointAnnotationOptions().withTextAnchor(TextAnchor.CENTER).withIconImage(bitmap)
-                                .withPoint(point);
-                        pointAnnotationManager.create(pointAnnotationOptions);
 
-                        setRoute.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                fetchRoute(point);
-                            }
-                        });
+                        searchResultsView.setVisibility(View.GONE);
                         return true;
                     }
                 });
                 focusLocationBtn.setOnClickListener(new View.OnClickListener() {
+                    // Botão de focar no usuário
                     @Override
                     public void onClick(View view) {
-                        focusLocation = true;
-                        getGestures(mapView).addOnMoveListener(onMoveListener);
-                        focusLocationBtn.hide();
+                        focusLocation = true; // Foca na posição atual do usuário
+                        getGestures(mapView).addOnMoveListener(onMoveListener); // habilita o movimento do mapa
+                        focusLocationBtn.hide(); // esconde o botão
                     }
                 });
+
+
                 placeAutocompleteUiAdapter.addSearchListener(new PlaceAutocompleteUiAdapter.SearchListener() {
                     @Override
                     public void onSuggestionsShown(@NonNull List<PlaceAutocompleteSuggestion> list) {
@@ -326,22 +419,29 @@ public class TravelFragment extends Fragment {
                     }
 
                     @Override
+                    // Quando a localização for selecionada
                     public void onSuggestionSelected(@NonNull PlaceAutocompleteSuggestion placeAutocompleteSuggestion) {
                         ignoreNextQueryUpdate = true;
-                        focusLocation = false;
-                        searchET.setText(placeAutocompleteSuggestion.getName());
-                        searchResultsView.setVisibility(View.GONE);
+                        focusLocation = false; // desabilita o foco no usuário
 
+                        searchET.setText(placeAutocompleteSuggestion.getName()); // Vai adicionar a sugestão selecionada ao campo de texto
+                        searchResultsView.setVisibility(View.GONE); // Oculta o campo de sugestão
+
+                        // Mesmo processo do OnMapClick()
                         pointAnnotationManager.deleteAll();
                         PointAnnotationOptions pointAnnotationOptions = new PointAnnotationOptions().withTextAnchor(TextAnchor.CENTER).withIconImage(bitmap)
                                 .withPoint(placeAutocompleteSuggestion.getCoordinate());
                         pointAnnotationManager.create(pointAnnotationOptions);
-                        updateCamera(placeAutocompleteSuggestion.getCoordinate(), 0.0);
+
+
+                        updateCamera(placeAutocompleteSuggestion.getCoordinate(), 0.0); // Move a câmera até o ponto e o ângulo ao norte
 
                         setRoute.setOnClickListener(new View.OnClickListener() {
+                            // Ao clicar no ponto ele usa a posição fornecida para fazer a rota
                             @Override
                             public void onClick(View view) {
                                 fetchRoute(placeAutocompleteSuggestion.getCoordinate());
+                                setRoute.setVisibility(View.GONE);
                             }
                         });
                     }
@@ -362,7 +462,11 @@ public class TravelFragment extends Fragment {
 
         return view;
     }
+
+
+
     @SuppressLint("MissingPermission")
+    // Vai setar as rotar de um ponto ao outro
     private void fetchRoute(Point point) {
         LocationEngine locationEngine = LocationEngineProvider.getBestLocationEngine(requireContext());
         locationEngine.getLastLocation(new LocationEngineCallback<LocationEngineResult>() {
@@ -370,7 +474,7 @@ public class TravelFragment extends Fragment {
             public void onSuccess(LocationEngineResult result) {
                 Location location = result.getLastLocation();
                 setRoute.setEnabled(false);
-                setRoute.setText("Fetching route...");
+                setRoute.setText(R.string.buscandoRota);
                 RouteOptions.Builder builder = RouteOptions.builder();
                 Point origin = Point.fromLngLat(Objects.requireNonNull(location).getLongitude(), location.getLatitude());
                 builder.coordinatesList(Arrays.asList(origin, point));
@@ -385,13 +489,13 @@ public class TravelFragment extends Fragment {
                         mapboxNavigation.setNavigationRoutes(list);
                         focusLocationBtn.performClick();
                         setRoute.setEnabled(true);
-                        setRoute.setText("Set route");
+                        setRoute.setText(R.string.btnBuscarRota);
                     }
 
                     @Override
                     public void onFailure(@NonNull List<RouterFailure> list, @NonNull RouteOptions routeOptions) {
                         setRoute.setEnabled(true);
-                        setRoute.setText("Set route");
+                        setRoute.setText(R.string.btnBuscarRota);
                         Toast.makeText(requireContext(), "Route request failed", Toast.LENGTH_SHORT).show();
                     }
 
@@ -427,8 +531,6 @@ public class TravelFragment extends Fragment {
             mapboxNavigation.unregisterLocationObserver(locationObserver);
             mapboxNavigation.onDestroy();
         }
-
-
     }
 }
 
