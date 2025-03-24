@@ -48,8 +48,10 @@ public class AccountInformationFragment extends Fragment {
         // Inflate the layout for this fragment
         View view;
 
-        if(SystemAtributes.user.getCpf() != null){ //Se o usuário for um Motorista
-            view = inflater.inflate(R.layout.fragment_account_information_driver, container, false);
+        if(SystemAtributes.user.getCpf() != null && SystemAtributes.user.getCpf() != "NaN"){ //Se o usuário for um Motorista
+            view = inflater.inflate(R.layout.fragment_account_information_driver, container, false); //Salva o inflate do fragmento de informações de conta do usuário motorista (será retornado ao final do método onCreateView)
+
+            //----------------Instânciando elementos do fragment-----------------------
 
             TextInputEditText profileNameEditText = view.findViewById(R.id.profileNameEditText);
             TextInputEditText profileLastNameEditText = view.findViewById(R.id.profileLastNameEditText);
@@ -70,18 +72,24 @@ public class AccountInformationFragment extends Fragment {
             AppCompatButton cancelButton = view.findViewById(R.id.cancelButton);
             AppCompatButton deleteButton = view.findViewById(R.id.deleteButton);
 
-            updateRegisterUserDriver(view);
+            //-----------------------------------------------------------------
 
-            updateButton.setOnClickListener(new View.OnClickListener() {
+            updateRegisterUserDriver(view); //Preenche os campos do fragment com as informações do motorista
+
+            //------------------Configurando ações dos botões---------------------------
+
+            updateButton.setOnClickListener(new View.OnClickListener() { //Ao clicar no botão atualizar usuário
                 @Override
                 public void onClick(View v) {
 
-                    User user = SystemAtributes.user;
-                    User userOriginal = new User(user.getName(),user.getLastName(),
+                    User user = SystemAtributes.user; //Salva o endereço do usuário na memória dentro da variável user
+                    User userOriginal = new User(user.getName(),user.getLastName(), //Cria outro objeto idêntico ao usuário atual dentro da variável userOriginal
                             user.getEmail(),user.getPhoneNumber(),user.getPassword(),
                             user.getCpf(),user.getRg(), user.getDayBirthday(),user.getMonthBirthday(),
                             user.getYearBirthday());
                     userOriginal.setId(user.getId());
+
+                    //-------------Atualiza os dados do usuário motorista-------------
 
                     user.setName(profileNameEditText.getText().toString());
                     user.setLastName(profileLastNameEditText.getText().toString());
@@ -108,38 +116,44 @@ public class AccountInformationFragment extends Fragment {
 
                     user.setPassword(passwordEditText.getText().toString());
 
-                    Call<User> call = SystemAtributes.apiService.updateUserDriver(user);
+                    //--------------------------------------------------------------
 
-                    call.enqueue(new Callback<User>() {
+                    Call<User> call = SystemAtributes.apiService.updateUserDriver(user); //Cria uma chamada para o endereço da função updateUserDriver da API
+
+                    call.enqueue(new Callback<User>() { //Configurando resposta ao retorno da requisição
                         @Override
-                        public void onResponse(Call<User> call, Response<User> response) {
-                            if(response.isSuccessful()){
+                        public void onResponse(Call<User> call, Response<User> response) { //Quando há resposta
+                            if(response.isSuccessful()){ //Se a resposta foi bem sucedida
                                 Toast.makeText(getActivity().getApplicationContext(), "Usuário atualizado com sucesso!",Toast.LENGTH_LONG).show();
-                            }else{
+                            }else{//Se não
                                 Toast.makeText(getActivity().getApplicationContext(), "Falha ao atualizar usuário!",Toast.LENGTH_LONG).show();
-                                SystemAtributes.user = userOriginal;
-                                updateRegisterUserDriver(view);
+                                SystemAtributes.user = userOriginal;//Retoma a antiga forma do usuário
+                                updateRegisterUserDriver(view); //Preenche os campos do fragment com as informações do motorista
                             }
                         }
 
                         @Override
-                        public void onFailure(Call<User> call, Throwable throwable) {
+                        public void onFailure(Call<User> call, Throwable throwable) { //Quando não há resposta
                             Toast.makeText(getActivity().getApplicationContext(), "Erro: Servidor não responde",Toast.LENGTH_LONG).show();
-                            SystemAtributes.user = userOriginal;
+                            SystemAtributes.user = userOriginal; //Retoma a antiga forma do usuário
                         }
                     });
                 }
             });
 
-            deleteButton.setOnClickListener(new View.OnClickListener() {
+            deleteButton.setOnClickListener(new View.OnClickListener() {//Ao clicar no botão deletar usuário
                 @Override
                 public void onClick(View v) {
-                    alertDialogDeleteUser(SystemAtributes.apiService.deleteUserDriver(SystemAtributes.user));
+                    alertDialogDeleteUser(SystemAtributes.apiService.deleteUserDriver(SystemAtributes.user)); //Gera um alertDialog para o usuário, perguntando-lhe se deseja deletar sua conta de motorista
                 }
             });
 
+            //----------------------------------------------------------------------------------
+
         }else{ //Se o usuário for um Passageiro
-            view = inflater.inflate(R.layout.fragment_account_information_passenger, container, false);
+            view = inflater.inflate(R.layout.fragment_account_information_passenger, container, false); //Salva o inflate do fragmento de informações de conta do usuário passageiro (será retornado ao final do método onCreateView)
+
+            //----------------Instânciando elementos do fragment-----------------------
 
             TextInputEditText profileNameEditText = view.findViewById(R.id.profileNameEditText);
             TextInputEditText profileLastNameEditText = view.findViewById(R.id.profileLastNameEditText);
@@ -150,16 +164,22 @@ public class AccountInformationFragment extends Fragment {
             AppCompatButton cancelButton = view.findViewById(R.id.cancelButton);
             AppCompatButton deleteButton = view.findViewById(R.id.deleteButton);
 
-            updateRegisterUserPassenger(view);
+            //----------------------------------------------------------
 
-            updateButton.setOnClickListener(new View.OnClickListener(){
+            updateRegisterUserPassenger(view);//Preenche os campos do fragment com as informações do passageiro
+
+            //------------------Configurando ações dos botões---------------------------
+
+            updateButton.setOnClickListener(new View.OnClickListener(){//Ao clicar no botão atualizar usuári
 
                 @Override
                 public void onClick(View v) {
-                    User user = SystemAtributes.user;
-                    User userOriginal = new User(user.getId(),user.getName(),user.getLastName(),
+                    User user = SystemAtributes.user; //Salva o endereço do usuário na memória dentro da variável user
+                    User userOriginal = new User(user.getId(),user.getName(),user.getLastName(),//Cria outro objeto idêntico ao usuário atual dentro da variável userOriginal
                             user.getEmail(),user.getPhoneNumber(),user.getPassword());
 
+
+                    //-------------Atualiza os dados do usuário motorista-------------
 
                     user.setName(profileNameEditText.getText().toString());
                     user.setLastName(profileLastNameEditText.getText().toString());
@@ -174,36 +194,39 @@ public class AccountInformationFragment extends Fragment {
 
                     user.setPassword(passwordProfile.getText().toString());
 
-                    Call<User> call = SystemAtributes.apiService.updateUserPassenger(user);
+                    //--------------------------------------------------------
 
-                    call.enqueue(new Callback<User>() {
+                    Call<User> call = SystemAtributes.apiService.updateUserPassenger(user);//Cria uma chamada para o endereço da função updateUserPassanger da API
+
+                    call.enqueue(new Callback<User>() {//Configurando resposta ao retorno da requisição
                         @Override
                         public void onResponse(Call<User> call, Response<User> response) {
-                            if(response.isSuccessful()){
+                            if(response.isSuccessful()){//Se a resposta for bem sucedida
                                 Toast.makeText(getActivity().getApplicationContext(), "Usuário atualizado com sucesso!",Toast.LENGTH_LONG).show();
-                            }else{
+                            }else{//Se não
                                 Toast.makeText(getActivity().getApplicationContext(), "Falha ao atualizar usuário!",Toast.LENGTH_LONG).show();
-                                SystemAtributes.user = userOriginal;
-                                updateRegisterUserPassenger(view);
+                                SystemAtributes.user = userOriginal;//Retoma a antiga forma do usuário
+                                updateRegisterUserPassenger(view);//Preenche os campos do fragment com as informações do passageiro
                             }
                         }
 
                         @Override
-                        public void onFailure(Call<User> call, Throwable throwable) {
+                        public void onFailure(Call<User> call, Throwable throwable) {//Quando não há resposta
                             Toast.makeText(getActivity().getApplicationContext(), "Erro: Servidor não responde",Toast.LENGTH_LONG).show();
-                            SystemAtributes.user = userOriginal;
+                            SystemAtributes.user = userOriginal;//Retoma a antiga forma do usuário
                         }
                     });
                 }
             });
 
-            deleteButton.setOnClickListener(new View.OnClickListener(){
+            deleteButton.setOnClickListener(new View.OnClickListener(){//Ao clicar no botão deletar usuário
 
                 @Override
                 public void onClick(View v) {
-                    alertDialogDeleteUser(SystemAtributes.apiService.deleteUserPassenger(SystemAtributes.user));
+                    alertDialogDeleteUser(SystemAtributes.apiService.deleteUserPassenger(SystemAtributes.user));//Gera um alertDialog para o usuário, perguntando-lhe se deseja deletar sua conta de passageiro
                 }
             });
+            //------------------------------------------------------------
         }
 
 
@@ -211,7 +234,10 @@ public class AccountInformationFragment extends Fragment {
         return view;
     }
 
-    public void updateRegisterUserDriver(View view){
+    public void updateRegisterUserDriver(View view){ //Função que preenche os campos do fragmento de informações da conta do usuário motorista
+
+        //Instânciando variáveis com os elementos do fragment
+
         TextInputEditText profileNameEditText = view.findViewById(R.id.profileNameEditText);
         TextInputEditText profileLastNameEditText = view.findViewById(R.id.profileLastNameEditText);
         TextInputEditText profileCpfEditText = view.findViewById(R.id.profileCPFEditText);
@@ -227,7 +253,11 @@ public class AccountInformationFragment extends Fragment {
         TextInputEditText mainIdentificatorEditText = view.findViewById(R.id.mainIdentificatorProfile);
         TextInputEditText passwordEditText = view.findViewById(R.id.passwordProfile);
 
+        //--------------------------------------------------------
+
         User user = SystemAtributes.user;
+
+        //---------------Atribuindo os valores aos seus respectivos campos------------------
 
         profileNameEditText.setText(user.getName().toString());
         profileLastNameEditText.setText(user.getLastName().toString());
@@ -257,7 +287,10 @@ public class AccountInformationFragment extends Fragment {
         passwordEditText.setText(user.getPassword());
     }
 
-    public void updateRegisterUserPassenger(View view){
+    public void updateRegisterUserPassenger(View view){//Função que preenche os campos do fragmento de informações da conta do usuário passageiro
+
+        //Instânciando variáveis com os elementos do fragment
+
         TextInputEditText profileNameEditText = view.findViewById(R.id.profileNameEditText);
         TextInputEditText profileLastNameEditText = view.findViewById(R.id.profileLastNameEditText);
         TextInputEditText mainIdentificatorProfile = view.findViewById(R.id.mainIdentificatorProfile);
@@ -266,7 +299,11 @@ public class AccountInformationFragment extends Fragment {
         AppCompatButton updateButton = view.findViewById(R.id.updateButton);
         AppCompatButton deleteButton = view.findViewById(R.id.deleteButton);
 
+        //--------------------------------------------------------
+
         User user = SystemAtributes.user;
+
+        //---------------Atribuindo os valores aos seus respectivos campos------------------
 
         profileNameEditText.setText(user.getName().toString());
         profileLastNameEditText.setText(user.getLastName().toString());
@@ -279,44 +316,44 @@ public class AccountInformationFragment extends Fragment {
 
         passwordProfile.setText(user.getPassword().toString());
     }
-    public void alertDialogDeleteUser(Call<User> call){
-        AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
+    public void alertDialogDeleteUser(Call<User> call){ //Função para chamar um alertDialog para a ação de deletar conta
+        AlertDialog.Builder dialog = new AlertDialog.Builder(getContext()); //Instância um alertDialog
 
-        dialog.setTitle("Deletar Conta");
-        dialog.setMessage("Tem certeza de que deseja apagar sua conta?");
+        dialog.setTitle("Deletar Conta"); //Título do alertDialog
+        dialog.setMessage("Tem certeza de que deseja apagar sua conta?"); //Mensagem do alertDialog
 
-        dialog.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+        dialog.setPositiveButton("Sim", new DialogInterface.OnClickListener() { //Caso o botão "Sim" seja clicado
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                call.enqueue(new Callback<User>() {
+                call.enqueue(new Callback<User>() {//Configurando resposta ao retorno da requisição
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {
-                        if(response.isSuccessful()){
+                        if(response.isSuccessful()){//Se a resposta for bem sucedida
                             Toast.makeText(getActivity().getApplicationContext(), "Usuário deletado com sucesso!",Toast.LENGTH_LONG).show();
                             Intent intent = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
-                            startActivity(intent);
-                            getActivity().finish();
+                            startActivity(intent); //Retorne à activity de Login
+                            getActivity().finish(); //Encerre a activity atual
                         }else{
                             Toast.makeText(getActivity().getApplicationContext(), "Falha ao deletar usuário!",Toast.LENGTH_LONG).show();
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<User> call, Throwable throwable) {
+                    public void onFailure(Call<User> call, Throwable throwable) {//Quando não há resposta
                         Toast.makeText(getActivity().getApplicationContext(), "Erro: Servidor não responde",Toast.LENGTH_LONG).show();
                     }
                 });
             }
         });
-        dialog.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+        dialog.setNegativeButton("Não", new DialogInterface.OnClickListener() { //Caso o botão "Não" seja clicado
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
             }
         });
 
-        dialog.create();
-        dialog.show();
+        dialog.create(); //Criar alertDialog após as configurações do seu builder
+        dialog.show(); //Mostrar alertDialog
     }
 }

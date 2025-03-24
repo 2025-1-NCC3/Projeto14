@@ -25,12 +25,12 @@ import com.ubercab.securityvoice.R;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private TextInputEditText mainIdentificadorLogin;
-    private TextInputEditText passwordLogin;
-    private AppCompatButton loginButton;
-    private AppCompatButton registerButton;
+    private TextInputEditText mainIdentificadorLogin; //Barra de inserir email e telefone
+    private TextInputEditText passwordLogin; //Barra de inserir a senha da conta
+    private AppCompatButton loginButton; // Botão acessar
+    private AppCompatButton registerButton; // Botão cadastrar-se
 
-
+    private AppCompatButton testProfileButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,26 +43,39 @@ public class LoginActivity extends AppCompatActivity {
             return insets;
         });
 
+        //Instânciando variáveis de elementos da activity
+
         mainIdentificadorLogin = findViewById(R.id.mainIdentificatorLogin);
         passwordLogin = findViewById(R.id.passwordLogin);
         loginButton = findViewById(R.id.loginButton);
         registerButton = findViewById(R.id.registerButton);
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
+        testProfileButton = findViewById(R.id.testProfileButton);
+
+        testProfileButton.setOnClickListener(new View.OnClickListener(){
+
             @Override
             public void onClick(View v) {
-                User user = new User(mainIdentificadorLogin.getText().toString(),
-                        passwordLogin.getText().toString());
-                getLoginUser(user);
+                SystemAtributes.user = new User("Barrigudo", "da Silva", "barrigudo@gmail.com","1234","788910150560","718592312","male",10,"Fevereiro",1915);
+                changeActivity(0);
+            }
+        });
+
+        loginButton.setOnClickListener(new View.OnClickListener() {//Ao clicar no botão acessar
+            @Override
+            public void onClick(View v) {
+                User user = new User(mainIdentificadorLogin.getText().toString(),//Construa um objeto da classe User com
+                        passwordLogin.getText().toString());                     // os dados dos campos preenchidos
+                getLoginUser(user);// Obtenha o login de usuário(função abaixo)
 
             }
         });
-        registerButton.setOnClickListener(new View.OnClickListener(){
+        registerButton.setOnClickListener(new View.OnClickListener(){ //Ao clicar no botão cadastrar
 
             @Override
             public void onClick(View v) {
-                changeActivity(1);
-            }
+                changeActivity(1);} //Mude para a activity ChooseAccountActivity (para escolher o tipo de usuário que será cadastrado (motorista ou passageiro)
+
         });
     }
 
@@ -71,24 +84,35 @@ public class LoginActivity extends AppCompatActivity {
 
         call.enqueue(new Callback<User>() {//Executa a requisição da chamada call, que faz uma requisição assíncrona através da função enqueue, que tem como prâmetro um objeto anônimo Callback que espera como resposta um objeto User
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if(response.isSuccessful()){
+            public void onResponse(Call<User> call, Response<User> response) { //Ao responder
+                if(response.isSuccessful()){ //Se a resposta foi bem sucedida
                     SystemAtributes.user = response.body();
 
+                    //Caso seja um usuário passageiro, os campos de usuário motorista são respondidos com null pelo Banco de dados
+                    if(SystemAtributes.user.getCpf() == null){//Se o usuário for um passageiro
+                        SystemAtributes.user.setCpf("NaN");
+                        SystemAtributes.user.setRg("NaN");
+                        SystemAtributes.user.setGender("NaN");
+                        SystemAtributes.user.setMonthBirthday("NaN");
+                    }
+                    //Preencher com NaN se faz necessário, pois a api feita em Python não suporta
+                    //receber um objeto com atributos null
+
+
                     if(SystemAtributes.user.getId() == 0) { //Login ou senha inválidos
-                        Toast.makeText(getApplicationContext(), response.body().getName(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), response.body().getName(), Toast.LENGTH_LONG).show(); //Obtém a mensagem da api e imprimi na tela
                     }else{//Usuário logado com sucesso
                         Toast.makeText(getApplicationContext(), "Usuário logado com sucesso!", Toast.LENGTH_LONG).show();
-                        changeActivity(0);
+                        changeActivity(0); //Muda para a MainActivity
                     }
 
                 }else{
-                    Toast.makeText(getApplicationContext(),"Falha ao logar!",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),"Falha ao logar!",Toast.LENGTH_LONG).show(); //Se a resposta não for bem sucedida
                 }
             }
 
             @Override
-            public void onFailure(Call<User> call, Throwable throwable) {
+            public void onFailure(Call<User> call, Throwable throwable) { //Se a api não responder
                 Toast.makeText(getApplicationContext(),"Erro: Servidor não responde",Toast.LENGTH_LONG).show();
             }
         });
@@ -96,13 +120,13 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    public void changeActivity(int changeCode){
+    public void changeActivity(int changeCode){//Função para mudar a activity atual
         if(changeCode == 0){
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class); //Mudar para tela do principal do aplicativo
             startActivity(intent);
             finish();
         }else if(changeCode == 1){
-            Intent intent = new Intent(getApplicationContext(), ChooseAccountActivity.class);
+            Intent intent = new Intent(getApplicationContext(), ChooseAccountActivity.class); //Mudar para tela de escolha de tipo de cadastro
             startActivity(intent);
         }
     }

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.system.SecurityFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/textView7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:shadowColor="@color/white"
+                android:shadowRadius="40"
+                android:text="@string/security_securityTitleFragment"
+                android:textAlignment="center"
+                android:textSize="36dp" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/usersign_chooseaccountbutton"
+                android:drawableEnd="@drawable/baseline_arrow_forward_ios_24"
+
+                android:outlineSpotShadowColor="@color/white"
+
+                android:text="@string/security_securityVoiceButton"
+                android:textAlignment="viewStart"
+
+                android:onClick="securityVoiceConfigurationButton"
+                />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/usersign_chooseaccountbutton"
+                android:drawableEnd="@drawable/baseline_arrow_forward_ios_24"
+
+                android:outlineSpotShadowColor="@color/white"
+
+                android:text="@string/security_uAjudaButton"
+                android:textAlignment="viewStart"
+
+                />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/usersign_chooseaccountbutton"
+                android:drawableEnd="@drawable/baseline_arrow_forward_ios_24"
+
+                android:outlineSpotShadowColor="@color/white"
+
+                android:text="@string/security_uCódigo"
+                android:textAlignment="viewStart"
+
+                />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/usersign_chooseaccountbutton"
+                android:drawableEnd="@drawable/baseline_arrow_forward_ios_24"
+
+                android:outlineSpotShadowColor="@color/white"
+
+                android:text="@string/security_uÁudio"
+                android:textAlignment="viewStart"
+
+                />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/usersign_chooseaccountbutton"
+                android:drawableEnd="@drawable/baseline_arrow_forward_ios_24"
+
+                android:outlineSpotShadowColor="@color/white"
+
+                android:text="@string/security_uAcompanha"
+                android:textAlignment="viewStart"
+
+                />
+
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>
