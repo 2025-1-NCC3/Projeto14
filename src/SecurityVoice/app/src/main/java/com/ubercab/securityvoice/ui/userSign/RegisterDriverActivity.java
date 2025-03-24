@@ -19,6 +19,9 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.ubercab.entities.SystemAtributes;
 import com.ubercab.entities.User;
+import com.ubercab.exceptions.LengthCPFException;
+import com.ubercab.exceptions.LengthPhoneNumberException;
+import com.ubercab.exceptions.LengthRGException;
 import com.ubercab.securityvoice.MainActivity;
 import com.ubercab.securityvoice.R;
 
@@ -79,6 +82,20 @@ public class RegisterDriverActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
+
+                //Declarando as variáveis que recebem os valores dos campos
+
+                String driverName = driverNameEditText.getText().toString();
+                String driverLastName = driverLastNameEditText.getText().toString();
+                String driverMainIdentificador = mainIdentificatorRegisterDriver.getText().toString();
+                String driverCPF =  driverCPFEditText.getText().toString();
+                String driverRG = driverRGEditText.getText().toString();
+                String[] filter = driverMainIdentificador.split("@");
+                String driverPassword = passwordRegisterDriver.getText().toString();
+                int driverDayDate = Integer.parseInt(dayDateSpinner.getSelectedItem().toString());
+                String driverMouthDate = monthDateSpinner.getSelectedItem().toString();
+                int driverYearDate = Integer.parseInt(yearDateSpinner.getSelectedItem().toString());
+
                 String gender = null;
                 if(maleRadioButton.isChecked()){ //Define o gênero selecionado
                     gender = "male";
@@ -86,20 +103,42 @@ public class RegisterDriverActivity extends AppCompatActivity {
                     gender = "female";
                 }
 
-                User user = new User( //Constrói um objeto da classe User com os valores dos campos
-                    driverNameEditText.getText().toString(),
-                    driverLastNameEditText.getText().toString(),
-                    mainIdentificatorRegisterDriver.getText().toString(),
-                    passwordRegisterDriver.getText().toString(),
-                    driverCPFEditText.getText().toString(),
-                    driverRGEditText.getText().toString(),
-                    gender,
-                    Integer.parseInt(dayDateSpinner.getSelectedItem().toString()),
-                    monthDateSpinner.getSelectedItem().toString(),
-                    Integer.parseInt(yearDateSpinner.getSelectedItem().toString())
-                );
+                //Tratando exceções de preenchimento dos campos
+                try {
+                    if (driverCPF.length() != 11) { //Se o cpf não tiver a quantidade de dígitos correta
+                        throw new LengthCPFException("CPF inválido");
+                    }
 
-                registerUser(user); //Registra o usuário no banco de dados e no aplicativo
+                    if (driverRG.length() <= 7 || driverRG.length() >= 12) { //Se o rg não tiver a quantidade de dígitos correta
+                        throw new LengthRGException("RG inválido");
+                    }
+
+                    if (filter.length == 1) {//Se o principal identificador de usuário (e-mail ou telefone) for um número de telefone
+                        if (driverMainIdentificador.length() != 11 && driverMainIdentificador.length() != 12) { //Se o número de celular não tiver a quantidade de dígitos correta
+                            throw new LengthPhoneNumberException("Número de celular inválido");
+                        }
+                    }
+                    User user = new User( //Constrói um objeto da classe User com os valores dos campos
+
+                            driverName,
+                            driverLastName,
+                            driverMainIdentificador,
+                            driverPassword,
+                            driverCPF,
+                            driverRG,
+                            gender,
+                            driverDayDate,
+                            driverMouthDate,
+                            driverYearDate
+                    );
+                    registerUser(user); //Registra o usuário no banco de dados e no aplicativo
+                }catch (LengthCPFException e){
+                    Toast.makeText(getApplicationContext(),"CPF inválido",Toast.LENGTH_LONG).show();
+                }catch (LengthRGException e){
+                    Toast.makeText(getApplicationContext(), "RG inválido", Toast.LENGTH_SHORT).show();
+                }catch(LengthPhoneNumberException e){
+                    Toast.makeText(getApplicationContext(), "Número de celular inválido", Toast.LENGTH_SHORT).show();
+                }
 
             }
         });

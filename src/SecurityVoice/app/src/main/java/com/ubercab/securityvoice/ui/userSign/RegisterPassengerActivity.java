@@ -16,6 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.textfield.TextInputEditText;
 import com.ubercab.entities.SystemAtributes;
 import com.ubercab.entities.User;
+import com.ubercab.exceptions.LengthPhoneNumberException;
 import com.ubercab.securityvoice.MainActivity;
 import com.ubercab.securityvoice.R;
 
@@ -53,13 +54,28 @@ public class RegisterPassengerActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                User user = new User( //Constrói um objeto da classe User com os valores dos campos
-                        passengerNameEditText.getText().toString(),
-                        passengerLastNameEditText.getText().toString(),
-                        mainIdentificatorRegisterPassenger.getText().toString(),
-                        passwordRegisterPassenger.getText().toString()
-                );
-                registerPassenger(user);//Registra o usuário no banco de dados e no aplicativo
+                //Declarando as variáveis com os valores de preenchimento dos campos
+                String passengerName = passengerNameEditText.getText().toString();
+                String passengerLastName = passengerLastNameEditText.getText().toString();
+                String passengerMainIdentificatorRegister = mainIdentificatorRegisterPassenger.getText().toString();
+                String passengerPassword = passwordRegisterPassenger.getText().toString();
+                String[] filter = passengerMainIdentificatorRegister.split("@");
+
+                //Tratando exceções de preenchimento dos campos
+                try {
+                    if (filter.length == 1) { //Se o principal identificador de usuário (e-mail ou telefone) for um número de telefone
+                        if (passengerMainIdentificatorRegister.length() != 11 && passengerMainIdentificatorRegister.length() != 12) { //Se o número de celular não tiver a quantidade de dígitos correta
+                            throw new LengthPhoneNumberException("Número de celular inválid");
+                        }
+                    }
+
+                    User user = new User( //Constrói um objeto da classe User com os valores dos campos
+                            passengerName, passengerLastName, passengerPassword, passengerMainIdentificatorRegister
+                    );
+                    registerPassenger(user);//Registra o usuário no banco de dados e no aplicativo
+                }catch(LengthPhoneNumberException e){
+                    Toast.makeText(getApplicationContext(),"Numero de celular inválido",Toast.LENGTH_LONG).show();
+                }
             }
         });
 

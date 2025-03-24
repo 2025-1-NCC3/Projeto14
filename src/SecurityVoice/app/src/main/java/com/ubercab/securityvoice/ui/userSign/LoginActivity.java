@@ -19,6 +19,7 @@ import retrofit2.Response;
 import com.google.android.material.textfield.TextInputEditText;
 import com.ubercab.entities.SystemAtributes;
 import com.ubercab.entities.User;
+import com.ubercab.exceptions.LengthPhoneNumberException;
 import com.ubercab.securityvoice.MainActivity;
 import com.ubercab.securityvoice.R;
 
@@ -64,10 +65,26 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {//Ao clicar no botão acessar
             @Override
             public void onClick(View v) {
-                User user = new User(mainIdentificadorLogin.getText().toString(),//Construa um objeto da classe User com
-                        passwordLogin.getText().toString());                     // os dados dos campos preenchidos
-                getLoginUser(user);// Obtenha o login de usuário(função abaixo)
 
+                //Declarando variáveis com os valores de preenchimento dos campos
+
+                String mainIdentificator = mainIdentificadorLogin.getText().toString();
+                String password = passwordLogin.getText().toString();
+
+                //Tratando a exceção de login
+                String[] filter = mainIdentificator.split("@");
+                try {
+                    if (filter.length == 1) {//Se o principal identificador de usuário (e-mail ou telefone) for um número de telefone
+                        if (mainIdentificator.length() != 12 && mainIdentificadorLogin.length() != 11) { //Se o número de telefone não tiver a quantidade de dígitos correta
+                            throw new LengthPhoneNumberException("Número de Celular Inválido");
+                        }
+                    }
+
+                    User user = new User(mainIdentificator, password);
+                    getLoginUser(user);
+                }catch(LengthPhoneNumberException e){
+                    Toast.makeText(getApplicationContext(), "Número de Celular Inválido",Toast.LENGTH_LONG).show();
+                }
             }
         });
         registerButton.setOnClickListener(new View.OnClickListener(){ //Ao clicar no botão cadastrar
