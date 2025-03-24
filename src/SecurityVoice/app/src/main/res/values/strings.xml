@@ -212,6 +212,24 @@
         <item>2025</item>
     </string-array>
 
+    <string name="travel_travelButton">Viajar</string>
+
+    <string name="security_securityTitleFragment">Mecanismos de Segurança</string>
+    <string name="security_securityVoiceButton">SecurityVoice: Fale pela sua segurança</string>
+    <string name="security_uAjudaButton">U-Ajuda: conte com mais verificações de segurança</string>
+    <string name="security_uCódigo">Usar verificação de U-código</string>
+    <string name="security_uÁudio">U-Áudio</string>
+    <string name="security_uAcompanha">U-Acompanha:compartilhamento de viagem</string>
+
+    <string name="securityVoiceConfiguration_Title">Configuração do SecurityVoice</string>
+    <string name="securityVoiceConfiguration_emergencyCode">Fala de Emergência</string>
+    <string name="securityVoiceConfiguration_emergencyCodeDescription">Usada para acionar a central Uber e as autoridades em casos de emergência policial.</string>
+    <string name="securityVoiceConfiguration_uAudioExecution">Fala para acionar U-Áudio</string>
+    <string name="securityVoiceConfiguration_uAudioExecutionDescription">Usado para gravar a viagem para denúncias de abusos verbais.</string>
+    <string name="securityVoiceConfiguration_commandVoice">Comandos por voz</string>
+    <string name="securityVoiceConfiguration_CodeButton">Clique para gravar</string>
+    <string name="securityVoiceConfiguration_backButton">Voltar</string>
+
     <string name="profile_profileInformations">Informações da Conta</string>
     <string name="profile_profileActivity">Atividade</string>
     <string name="profile_profileConfigurations">Configurações</string>
@@ -223,4 +241,6 @@
     <string name="profile_AccountInformation_deleteButton">Deletar Conta</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- TODO: Remove or change this placeholder text -->
+
 </resources>

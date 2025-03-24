@@ -1,6 +1,8 @@
 package com.ubercab.entities;
 
 public class User {
+
+    //Informações do usuário
     private int id = 0;
     private String name = "NaN";
     private String lastName = "NaN";
@@ -14,6 +16,14 @@ public class User {
     private int dayBirthday = 0;
     private String monthBirthday = "NaN";
     private int yearBirthday = 0;
+    //----------------------------------------------
+
+    //---------Preferências de Segurança------------------
+    private String emergencyCode = "NaN";
+    private String uAudioCode = "NaN";
+    private boolean commandVoice = false;
+
+    //Construtores
 
     public User(String str, String pas) { //Construtor da operação de Login
         String[] filter = str.split("@");//Auxilia na identificação da diferença entre número de telefone e usuário inserido no mainIdentificator
@@ -28,12 +38,6 @@ public class User {
         }
         password = pas;
 
-        id = 0;
-        name="NaN";
-        lastName="NaN";
-        cpf="NaN";
-        rg="NaN";
-        gender="NaN";
     }
 
     public User(String name, String lastName, String str, String password) { //Construtor da operação de Cadastro de Passageiro
@@ -82,6 +86,8 @@ public class User {
         this.yearBirthday = yearBirthday;
 
     }
+
+    //Getters and Setters
 
     public int getId() {
         return id;
@@ -179,8 +185,32 @@ public class User {
         this.yearBirthday = yearBirthday;
     }
 
+    public String getEmergencyCode() {
+        return emergencyCode;
+    }
+
+    public void setEmergencyCode(String emergencyCode) {
+        this.emergencyCode = emergencyCode;
+    }
+
+    public String getuAudioCode() {
+        return uAudioCode;
+    }
+
+    public void setuAudioCode(String uAudioCode) {
+        this.uAudioCode = uAudioCode;
+    }
+
+    public boolean isCommandVoice() {
+        return commandVoice;
+    }
+
+    public void setCommandVoice(boolean commandVoice) {
+        this.commandVoice = commandVoice;
+    }
+
     @Override
     public String toString(){
-        return getName() + ", " + getLastName() + ", " + getEmail() + ", " +getPhoneNumber() + ", " +getPassword() + ", " +getCpf() + ", " +getRg() + ", " +getGender() + ", " +getDayBirthday() + ", " +getMonthBirthday() + ", " +getYearBirthday();
+        return getId() + ", " + getName() + ", " + getLastName() + ", " + getEmail() + ", " +getPhoneNumber() + ", " +getPassword() + ", " +getCpf() + ", " +getRg() + ", " +getGender() + ", " +getDayBirthday() + ", " +getMonthBirthday() + ", " + getYearBirthday() + ", " + getEmergencyCode() + ", " + getuAudioCode() + ", " + isCommandVoice();
     }
 }

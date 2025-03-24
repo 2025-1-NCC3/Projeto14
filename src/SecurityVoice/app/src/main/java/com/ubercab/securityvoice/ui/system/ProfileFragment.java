@@ -18,10 +18,7 @@ import com.ubercab.securityvoice.R;
 
 public class ProfileFragment extends Fragment {
 
-    public AppCompatButton profileActivityButton;
-    public AppCompatButton profileInformationButton;
-    public AppCompatButton profileConfigurationButton;
-    public AppCompatButton profileExitButton;
+
 
     public ProfileFragment(){
 
@@ -33,7 +30,7 @@ public class ProfileFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, //Carrega o fragmento com as opções do perfil do usuário
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
