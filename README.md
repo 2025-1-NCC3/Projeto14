@@ -14,9 +14,9 @@ Vide tutoriais do PI.
 
 ## Grupo 14
 
-## Integrantes: <a href="https://www.linkedin.com/in/victorbarq/">Goku Sayajin</a>, <a href="https://www.linkedin.com/in/victorbarq/">Saitama One</a>, <a href="https://www.linkedin.com/in/victorbarq/">Ikki de Fenix</a>, <a href="https://www.linkedin.com/in/victorbarq/">Yusuke Urameshi</a>, <a href="https://www.linkedin.com/in/victorbarq/">Roronoa Zoro</a>
+## Integrantes: <a href="https://github.com/BernardoSeijasCavalcante">Bernardo Seijas Cavalcante</a>, <a href="https://www.linkedin.com/in/eduardo-chen-zou-637443292/">Eduardo Chen Zou</a>, <a href="https://github.com/FabianoChou">Fabiano Henrique Chou</a>, <a href="https://github.com/ViniSantos09">Vinicius dos Santos Ribeiro</a>
 
-## Professores Orientadores: <a href="https://www.linkedin.com/in/victorbarq/">Dr. Victor Von Doom</a>, <a href="https://www.linkedin.com/in/victorbarq/">Me. Saitama</a>, <a href="https://www.linkedin.com/in/victorbarq/">Dr. Strange</a>, <a href="https://www.linkedin.com/in/victorbarq/">Me. Yoda</a>, <a href="https://www.linkedin.com/in/victorbarq/">Dr. Gero</a>
+## Professores Orientadores: <a href="">Marco Aurelio Lima Barbosa</a>, <a href="">Katia Milani Lara Bossi</a>,<a href="">Victor Bruno Alexander Rosetti de Quiroz</a>, <a href="">Vinicius Heltai Pacheco</a>
 
 ## Descrição
 
@@ -37,17 +37,44 @@ Meu projeto ajuda estudantes FECAP a configurarem seus githubs.
 -Raiz<br>
 |<br>
 |-->documentos<br>
-  &emsp;|-->antigos<br>
-  &emsp;|Documentação.docx<br>
-|-->executáveis<br>
-  &emsp;|-->windows<br>
-  &emsp;|-->android<br>
-  &emsp;|-->HTML<br>
+  &emsp;|-->Entrega 1<br>
+  &emsp;&emsp;|-->Análise Descritiva de Dados<br>
+  &emsp;&emsp;|-->Programação Orientada a Objetivos e Estrutura de Dados<br>
+  &emsp;&emsp;|-->Programação para Dispositivos Móveis<br>
+  &emsp;&emsp;|-->Projeto Interdisciplinar Aplicativo Móvel<br>
+    &emsp;|-->Entrega 2<br>
+  &emsp;&emsp;|-->Análise Descritiva de Dados<br>
+  &emsp;&emsp;|-->Programação Orientada a Objetivos e Estrutura de Dados<br>
+  &emsp;&emsp;|-->Programação para Dispositivos Móveis<br>
+  &emsp;&emsp;|-->Projeto Interdisciplinar Aplicativo Móvel<br>
+    &emsp;|-->Entrega 3<br>
+  &emsp;&emsp;|-->Análise Descritiva de Dados<br>
+  &emsp;&emsp;|-->Programação Orientada a Objetivos e Estrutura de Dados<br>
+  &emsp;&emsp;|-->Programação para Dispositivos Móveis<br>
+  &emsp;&emsp;|-->Projeto Interdisciplinar Aplicativo Móvel<br>
+    &emsp;|-->Entrega 4<br>
+  &emsp;&emsp;|-->Análise Descritiva de Dados<br>
+  &emsp;&emsp;|-->Programação Orientada a Objetivos e Estrutura de Dados<br>
+  &emsp;&emsp;|-->Programação para Dispositivos Móveis<br>
+  &emsp;&emsp;|-->Projeto Interdisciplinar Aplicativo Móvel<br>
+  &emsp;|README.md<br>
 |-->imagens<br>
 |-->src<br>
-  &emsp;|-->Backend<br>
-  &emsp;|-->Frontend<br>
+  &emsp;|-->Entrega 1<br>
+  &emsp;&emsp;|-->Backend<br>
+  &emsp;&emsp;|-->Frontend<br>
+  &emsp;|-->Entrega 2<br>
+  &emsp;&emsp;|-->Backend<br>
+  &emsp;&emsp;|-->Frontend<br>
+  &emsp;|-->Entrega 3<br>
+  &emsp;&emsp;|-->Backend<br>
+  &emsp;&emsp;|-->Frontend<br>
+  &emsp;|-->Entrega 4<br>
+  &emsp;&emsp;|-->Backend<br>
+  &emsp;&emsp;|-->Frontend<br>
+|.gitignore<br>
 |readme.md<br>
+
 
 A pasta raiz contem dois arquivos que devem ser alterados:
 
