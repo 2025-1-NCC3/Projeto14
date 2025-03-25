@@ -3,29 +3,12 @@
 ## Entrega 1
 <br><br>
 
-### Disciplina 1
+### Análise Descritiva de Dados
 
-<b>ALUNO 1- [Trabalho/Documento](https://github.com/fecaphub/Template_PI/blob/main/documentos/Entrega%201/Disciplina%201/Venha%20para%20a%20FECAP!.txt)</b>
-<br><br>
-<b>ALUNO 1- [Trabalho/Documento](https://github.com/fecaphub/Template_PI/blob/main/documentos/Entrega%201/Disciplina%201/Venha%20para%20a%20FECAP!.txt)</b>
-<br><br>
-<b>ALUNO 1- [Trabalho/Documento](https://github.com/fecaphub/Template_PI/blob/main/documentos/Entrega%201/Disciplina%201/Venha%20para%20a%20FECAP!.txt)</b>
+<b>Bernardo Seijas Cavalcante- [Trabalho/Documento](https://github.com/2025-1-NCC3/Projeto14/blob/main/documentos/Entrega%201/An%C3%A1lise%20Descritiva%20de%20Dados/An%C3%A1lise%20Descritiva%20de%20Dados.xlsx)</b>
 <br><br>
 
-### Disciplina 2
+### Programação Orientada a Objetivos e Estrutura de Dados
 
-<b>ALUNO 1- [Trabalho/Documento](https://github.com/fecaphub/Template_PI/blob/main/documentos/Entrega%201/Disciplina%201/Venha%20para%20a%20FECAP!.txt)</b>
-<br><br>
-<b>ALUNO 1- [Trabalho/Documento](https://github.com/fecaphub/Template_PI/blob/main/documentos/Entrega%201/Disciplina%201/Venha%20para%20a%20FECAP!.txt)</b>
-<br><br>
-<b>ALUNO 1- [Trabalho/Documento](https://github.com/fecaphub/Template_PI/blob/main/documentos/Entrega%201/Disciplina%201/Venha%20para%20a%20FECAP!.txt)</b>
-<br><br>
-
-### Disciplina 3
-
-<b>ALUNO 1- [Trabalho/Documento](https://github.com/fecaphub/Template_PI/blob/main/documentos/Entrega%201/Disciplina%201/Venha%20para%20a%20FECAP!.txt)</b>
-<br><br>
-<b>ALUNO 1- [Trabalho/Documento](https://github.com/fecaphub/Template_PI/blob/main/documentos/Entrega%201/Disciplina%201/Venha%20para%20a%20FECAP!.txt)</b>
-<br><br>
-<b>ALUNO 1- [Trabalho/Documento](https://github.com/fecaphub/Template_PI/blob/main/documentos/Entrega%201/Disciplina%201/Venha%20para%20a%20FECAP!.txt)</b>
+<b>Eduardo Chen Zou- [Trabalho/Documento](https://github.com/2025-1-NCC3/Projeto14/blob/main/documentos/Entrega%201/Programa%C3%A7%C3%A3o%20Orientada%20a%20Objetivos%20e%20Estrutura%20de%20Dados/Diagrama%20da%20Tela%20Principal%20com%20seus%20Fragmentos.pdf)</b>
 <br><br>
