@@ -8,10 +8,14 @@ import static com.mapbox.navigation.base.extensions.RouteOptionsExtensions.apply
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -19,8 +23,10 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -115,6 +121,8 @@ public class MapFragment extends Fragment {
     private MapboxNavigation mapboxNavigation; // gerencia a navegação do Mapbox
     boolean focusLocation = true; // Indica se a câmera do mapa deve seguir o usuário
 
+    private final String locationPermission = Manifest.permission.ACCESS_FINE_LOCATION;
+
 
     // Vai ver as mudanças no mapa e atualiza a posição da localização
     private final LocationObserver locationObserver = new LocationObserver() {
@@ -189,20 +197,65 @@ public class MapFragment extends Fragment {
             isGranted -> {
                 if (isGranted) {
                     Toast.makeText(requireContext(), "Permissão concedida! Reiniciar o app ", Toast.LENGTH_SHORT).show();
+                    startLocationServices();
+                } else {
+                    // Mostrar mensagem ao usuário
+                    Toast.makeText(requireContext(), "Caso a localização não apareça reinicie o app", Toast.LENGTH_SHORT).show();
                 }
             }
     );
 
+    // Método para verificar e solicitar permissões
+    private void checkAndRequestPermissions () {
+        // Verificar permissão de notificação para Android 13+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+            }
+        }
 
-    public MapFragment() {
-        // Required empty public constructor
+        // Verificar permissão de localização
+        if (ContextCompat.checkSelfPermission(requireContext(), locationPermission) == PackageManager.PERMISSION_GRANTED) {
+            startLocationServices();
+        } else {
+            // Solicitar apenas a permissão FINE_LOCATION (já inclui COARSE)
+            permissionLauncher.launch(locationPermission);
+        }
+    }
+    ;
+
+    // Método para iniciar os serviços de localização
+    private void startLocationServices () {
+        try {
+            if (ContextCompat.checkSelfPermission(requireContext(), locationPermission) == PackageManager.PERMISSION_GRANTED) {
+                // Verificar se o GPS está ativado
+                LocationManager locationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
+                boolean isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+                if (isGpsEnabled) {
+                    mapboxNavigation.startTripSession();
+                } else {
+                    // Pedir para usuário ativar o GPS
+                    showGpsSettingsDialog();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(requireContext(), "Erro ao iniciar serviços de localização", Toast.LENGTH_SHORT).show();
+        }
     }
 
-
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    // Método para mostrar diálogo pedindo para ativar GPS
+    private void showGpsSettingsDialog() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("GPS desativado")
+                .setMessage("Por favor, ative o GPS para continuar")
+                .setPositiveButton("Configurações", (dialog, which) -> {
+                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(intent);
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
     }
 
     @Override
@@ -213,10 +266,10 @@ public class MapFragment extends Fragment {
 
         TextView dica = view.findViewById(R.id.dica);
 
-        if(SystemAtributes.user.getEmergencyCode() != "NaN" && SystemAtributes.user.getEmergencyCode() != null){
+        if (SystemAtributes.user.getEmergencyCode() != "NaN" && SystemAtributes.user.getEmergencyCode() != null) {
             SpeechRecognizerClass.startListening(getActivity(), SpeechRecognizerTypeExecution.LISTENING);
             dica.setText("Diga:" + SystemAtributes.user.getEmergencyCode().toString());
-        }else{
+        } else {
             dica.setText("Dica: Configure sua Fala de Emergência nas configurações de segurança de SecurityVoice (Faça isso para testar a ideia do aplicativo).");
         }
 
@@ -249,19 +302,8 @@ public class MapFragment extends Fragment {
 
         focusLocationBtn.hide(); // Esconde o botão por padrão
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
-            }
-        }
+        checkAndRequestPermissions();
 
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
-            permissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION);
-        } else {
-            mapboxNavigation.startTripSession();
-        }
 
         setRoute.setOnClickListener(new View.OnClickListener() {
             // Caso o usuário clique sem ter selecionado nenhum ponto no mapa
