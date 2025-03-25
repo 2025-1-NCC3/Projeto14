@@ -4,9 +4,9 @@
 <a href= "https://www.fecap.br/"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhZPrRa89Kma0ZZogxm0pi-tCn_TLKeHGVxywp-LXAFGR3B1DPouAJYHgKZGV0XTEf4AE&usqp=CAU" alt="FECAP - Fundação de Comércio Álvares Penteado" border="0"></a>
 </p>
 
-# Projeto 14
+# Security Voice 
 
-## Security Voice 
+## Grupo 14
 
 ## Integrantes: <a href="https://github.com/BernardoSeijasCavalcante">Bernardo Seijas Cavalcante</a>, <a href="https://www.linkedin.com/in/eduardo-chen-zou-637443292/">Eduardo Chen Zou</a>, <a href="https://github.com/FabianoChou">Fabiano Henrique Chou</a>, <a href="https://github.com/ViniSantos09">Vinicius dos Santos Ribeiro</a>
 
