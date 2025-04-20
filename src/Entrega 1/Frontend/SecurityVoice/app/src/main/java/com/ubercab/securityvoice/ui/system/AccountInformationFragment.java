@@ -17,6 +17,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.ubercab.criptography.Criptography;
 import com.ubercab.entities.SystemAtributes;
 import com.ubercab.entities.User;
 import com.ubercab.securityvoice.MainActivity;
@@ -96,9 +97,9 @@ public class AccountInformationFragment extends Fragment {
                     user.setCpf(profileCpfEditText.getText().toString());
                     user.setRg(profileRgEditText.getText().toString());
 
-                    user.setDayBirthday(Integer.parseInt(dayDateSpinner.getSelectedItem().toString()));
+                    user.setDayBirthday(dayDateSpinner.getSelectedItem().toString());
                     user.setMonthBirthday(monthDateSpinner.getSelectedItem().toString());
-                    user.setYearBirthday(Integer.parseInt(yearDateSpinner.getSelectedItem().toString()));
+                    user.setYearBirthday(yearDateSpinner.getSelectedItem().toString());
 
                     if(maleRadioButton.isChecked()){
                         user.setGender("male");
@@ -118,7 +119,11 @@ public class AccountInformationFragment extends Fragment {
 
                     //--------------------------------------------------------------
 
-                    Call<User> call = SystemAtributes.apiService.updateUserDriver(user); //Cria uma chamada para o endereço da função updateUserDriver da API
+                    //--------Criptografia----------
+                    User userCrypt = Criptography.userCriptography(user);
+                    //------------------------------
+
+                    Call<User> call = SystemAtributes.apiService.updateUserDriver(userCrypt); //Cria uma chamada para o endereço da função updateUserDriver da API
 
                     call.enqueue(new Callback<User>() { //Configurando resposta ao retorno da requisição
                         @Override
@@ -196,7 +201,11 @@ public class AccountInformationFragment extends Fragment {
 
                     //--------------------------------------------------------
 
-                    Call<User> call = SystemAtributes.apiService.updateUserPassenger(user);//Cria uma chamada para o endereço da função updateUserPassanger da API
+                    User userCrypt = Criptography.userCriptography(user);
+
+
+
+                    Call<User> call = SystemAtributes.apiService.updateUserPassenger(userCrypt);//Cria uma chamada para o endereço da função updateUserPassanger da API
 
                     call.enqueue(new Callback<User>() {//Configurando resposta ao retorno da requisição
                         @Override
@@ -264,13 +273,13 @@ public class AccountInformationFragment extends Fragment {
         profileCpfEditText.setText(user.getCpf().toString());
         profileRgEditText.setText(user.getRg().toString());
 
-        dayDateSpinner.setSelection(user.getDayBirthday() - 1);
+        dayDateSpinner.setSelection(Integer.parseInt(user.getDayBirthday()) - 1);
 
         ArrayAdapter<String> monthDateSpinnerAdapter = (ArrayAdapter<String>) monthDateSpinner.getAdapter();
         int position = monthDateSpinnerAdapter.getPosition(user.getMonthBirthday().toString());
         monthDateSpinner.setSelection(position);
 
-        yearDateSpinner.setSelection(user.getYearBirthday() - 1900);
+        yearDateSpinner.setSelection(Integer.parseInt(user.getYearBirthday()) - 1900);
 
         if(user.getGender().equals("male")){
             maleRadioButton.setChecked(true);

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.ubercab.criptography.Criptography;
 import com.ubercab.entities.SystemAtributes;
 import com.ubercab.entities.User;
 import com.ubercab.resources.SpeechRecognizerClass;
@@ -70,7 +71,7 @@ public class SecurityVoiceConfigurationFragment extends Fragment {
             uAudioCodeButton.setText(SystemAtributes.user.getuAudioCode());//Atribua o valor da variável ao texto do botão
         }
 
-        commandVoice.setChecked(SystemAtributes.user.isCommandVoice()); //Atribui a checagem do switch commandVoice como sendo o valor da variável commandVoice do usuário
+        commandVoice.setChecked(Boolean.getBoolean(SystemAtributes.user.getCommandVoice())); //Atribui a checagem do switch commandVoice como sendo o valor da variável commandVoice do usuário
 
         emergencyCodeButton.setOnClickListener(new View.OnClickListener() { //Ao clicar no botão emergencyCodeButton
             @Override
@@ -104,7 +105,8 @@ public class SecurityVoiceConfigurationFragment extends Fragment {
         commandVoice.setOnClickListener(new View.OnClickListener() { //Se o commandVoice for alterado
             @Override
             public void onClick(View v) {
-                SystemAtributes.user.setCommandVoice(commandVoice.isChecked()); //Atribua a ativação dos comando por voz às preferências do usuário
+                SystemAtributes.user.setCommandVoice(commandVoice.isChecked() == true ? "true" : "false"); //Atribua a ativação dos comando por voz às preferências do usuário
+
             }
         });
 
@@ -112,10 +114,13 @@ public class SecurityVoiceConfigurationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Call<User> call = null;
+
+                User userCrypt = Criptography.userCriptography(SystemAtributes.user);
+
                 if(SystemAtributes.user.getCpf() == "NaN" || SystemAtributes.user.getCpf() == null) {//Se o usuário for um passageiro
-                    call = SystemAtributes.apiService.securityVoiceConfigurationPassenger(SystemAtributes.user); //instancie a chamada da api com a função de atualizar configurações de security voice do passageiro
+                    call = SystemAtributes.apiService.securityVoiceConfigurationPassenger(userCrypt); //instancie a chamada da api com a função de atualizar configurações de security voice do passageiro
                 }else{ //Se o usuário for um motorista
-                    call = SystemAtributes.apiService.securityVoiceConfigurationDriver(SystemAtributes.user);//instancie a chamada da api com a função de atualizar configurações de security voice do motorista
+                    call = SystemAtributes.apiService.securityVoiceConfigurationDriver(userCrypt);//instancie a chamada da api com a função de atualizar configurações de security voice do motorista
                 }
 
                 call.enqueue(new Callback<User>() {//Configurando resposta ao retorno da requisição

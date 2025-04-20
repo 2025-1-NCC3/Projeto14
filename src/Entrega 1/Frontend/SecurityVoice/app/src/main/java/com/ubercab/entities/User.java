@@ -3,7 +3,7 @@ package com.ubercab.entities;
 public class User {
 
     //Informações do usuário
-    private int id = 0;
+    private Integer id = 0;
     private String name = "NaN";
     private String lastName = "NaN";
     private String email = "NaN";
@@ -13,17 +13,21 @@ public class User {
     private String rg = "NaN";
     private String gender = "NaN";
 
-    private int dayBirthday = 0;
+    private String dayBirthday = "0";
     private String monthBirthday = "NaN";
-    private int yearBirthday = 0;
+    private String yearBirthday = "0";
     //----------------------------------------------
 
     //---------Preferências de Segurança------------------
     private String emergencyCode = "NaN";
     private String uAudioCode = "NaN";
-    private boolean commandVoice = false;
+    private String commandVoice = "false";
 
     //Construtores
+
+    public User(){
+
+    }
 
     public User(String str, String pas) { //Construtor da operação de Login
         String[] filter = str.split("@");//Auxilia na identificação da diferença entre número de telefone e usuário inserido no mainIdentificator
@@ -55,7 +59,7 @@ public class User {
         this.password = password;
     }
 
-    public User(int id, String name, String lastName, String email, String phoneNumber, String password) {
+    public User(Integer id, String name, String lastName, String email, String phoneNumber, String password) {
         this.id = id;
         this.name = name;
         this.lastName = lastName;
@@ -65,7 +69,7 @@ public class User {
     }
 
     public User(String name, String lastName, String str, String password, String cpf,
-                String rg, String gender, int dayBirthday, String monthBirthday, int yearBirthday) { // Construtor da operação de cadastro de Motorista
+                String rg, String gender, String dayBirthday, String monthBirthday, String yearBirthday) { // Construtor da operação de cadastro de Motorista
         this.name = name;
         this.lastName = lastName;
         String[] filter = str.split("@");//Auxilia na identificação da diferença entre número de telefone e usuário inserido no mainIdentificator
@@ -89,11 +93,12 @@ public class User {
 
     //Getters and Setters
 
-    public int getId() {
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -145,14 +150,6 @@ public class User {
         this.cpf = cpf;
     }
 
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
     public String getRg() {
         return rg;
     }
@@ -161,11 +158,19 @@ public class User {
         this.rg = rg;
     }
 
-    public int getDayBirthday() {
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getDayBirthday() {
         return dayBirthday;
     }
 
-    public void setDayBirthday(int dayBirthday) {
+    public void setDayBirthday(String dayBirthday) {
         this.dayBirthday = dayBirthday;
     }
 
@@ -177,11 +182,11 @@ public class User {
         this.monthBirthday = monthBirthday;
     }
 
-    public int getYearBirthday() {
+    public String getYearBirthday() {
         return yearBirthday;
     }
 
-    public void setYearBirthday(int yearBirthday) {
+    public void setYearBirthday(String yearBirthday) {
         this.yearBirthday = yearBirthday;
     }
 
@@ -201,16 +206,16 @@ public class User {
         this.uAudioCode = uAudioCode;
     }
 
-    public boolean isCommandVoice() {
+    public String getCommandVoice() {
         return commandVoice;
     }
 
-    public void setCommandVoice(boolean commandVoice) {
+    public void setCommandVoice(String commandVoice) {
         this.commandVoice = commandVoice;
     }
 
     @Override
     public String toString(){
-        return getId() + ", " + getName() + ", " + getLastName() + ", " + getEmail() + ", " +getPhoneNumber() + ", " +getPassword() + ", " +getCpf() + ", " +getRg() + ", " +getGender() + ", " +getDayBirthday() + ", " +getMonthBirthday() + ", " + getYearBirthday() + ", " + getEmergencyCode() + ", " + getuAudioCode() + ", " + isCommandVoice();
+        return getId() + ", " + getName() + ", " + getLastName() + ", " + getEmail() + ", " +getPhoneNumber() + ", " +getPassword() + ", " +getCpf() + ", " +getRg() + ", " +getGender() + ", " +getDayBirthday() + ", " +getMonthBirthday() + ", " + getYearBirthday() + ", " + getEmergencyCode() + ", " + getuAudioCode() + ", " + getCommandVoice();
     }
 }

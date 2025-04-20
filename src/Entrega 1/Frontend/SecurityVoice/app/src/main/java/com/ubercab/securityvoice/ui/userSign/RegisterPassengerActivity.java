@@ -14,6 +14,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.ubercab.criptography.Criptography;
 import com.ubercab.entities.SystemAtributes;
 import com.ubercab.entities.User;
 import com.ubercab.exceptions.LengthPhoneNumberException;
@@ -70,7 +71,7 @@ public class RegisterPassengerActivity extends AppCompatActivity {
                     }
 
                     User user = new User( //Constrói um objeto da classe User com os valores dos campos
-                            passengerName, passengerLastName, passengerPassword, passengerMainIdentificatorRegister
+                            passengerName, passengerLastName, passengerMainIdentificatorRegister, passengerPassword
                     );
                     registerPassenger(user);//Registra o usuário no banco de dados e no aplicativo
                 }catch(LengthPhoneNumberException e){
@@ -88,15 +89,21 @@ public class RegisterPassengerActivity extends AppCompatActivity {
     }
 
     public void registerPassenger(User user){//Função de registrar usuário
-        Call<User> call = SystemAtributes.apiService.registerPassenger(user);//Instância a variável call com uma chamada da função registerPassanger da API
+        User userCrypt = Criptography.userCriptography(user);
+
+        Call<User> call = SystemAtributes.apiService.registerPassenger(userCrypt);//Instância a variável call com uma chamada da função registerPassanger da API
 
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {//Executa a requisição da chamada call, que faz uma requisição assíncrona através da função enqueue, que tem como prâmetro um objeto anônimo Callback que espera como resposta um objeto User
                 if(response.isSuccessful()){//Se a resposta for bem sucedida
                     Toast.makeText(getApplicationContext(),"Usuário cadastrado com sucesso!", Toast.LENGTH_LONG).show();
-                    SystemAtributes.user = response.body();//O usuário atual recebe o usuário recebido da API (a API FAZ INSERT INTO DO USUÁRIO E SELECT DELE MESMO PARA RETORNAR O CORPO DO OBJETO JAVA COM A PRIMARY KEY DO REGISTRO DO USUÁRIO)
-
+                    SystemAtributes.user = Criptography.userDecrypt(response.body());//O usuário atual recebe o usuário recebido da API (a API FAZ INSERT INTO DO USUÁRIO E SELECT DELE MESMO PARA RETORNAR O CORPO DO OBJETO JAVA COM A PRIMARY KEY DO REGISTRO DO USUÁRIO)
+                    try {
+                        System.out.println(Criptography.decrypt(userCrypt.getEmail()));
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
                     //Como o usuário é um passageiro, os campos de usuário motorista são respondidos com null pelo Banco de dados
                     SystemAtributes.user.setCpf("NaN");
                     SystemAtributes.user.setRg("NaN");

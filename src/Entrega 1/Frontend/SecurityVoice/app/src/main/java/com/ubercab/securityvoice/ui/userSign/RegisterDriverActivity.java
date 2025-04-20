@@ -17,6 +17,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
+import com.ubercab.criptography.Criptography;
 import com.ubercab.entities.SystemAtributes;
 import com.ubercab.entities.User;
 import com.ubercab.exceptions.LengthCPFException;
@@ -92,9 +93,9 @@ public class RegisterDriverActivity extends AppCompatActivity {
                 String driverRG = driverRGEditText.getText().toString();
                 String[] filter = driverMainIdentificador.split("@");
                 String driverPassword = passwordRegisterDriver.getText().toString();
-                int driverDayDate = Integer.parseInt(dayDateSpinner.getSelectedItem().toString());
+                String driverDayDate = dayDateSpinner.getSelectedItem().toString();
                 String driverMouthDate = monthDateSpinner.getSelectedItem().toString();
-                int driverYearDate = Integer.parseInt(yearDateSpinner.getSelectedItem().toString());
+                String driverYearDate = yearDateSpinner.getSelectedItem().toString();
 
                 String gender = null;
                 if(maleRadioButton.isChecked()){ //Define o gênero selecionado
@@ -153,7 +154,10 @@ public class RegisterDriverActivity extends AppCompatActivity {
     }
 
     public void registerUser(User user){ //Função de registrar usuário
-        Call<User> call = SystemAtributes.apiService.registerDriver(user); //Instância a variável call com uma chamada da função registerDriver da API
+
+        User userCrypt = Criptography.userCriptography(user);
+
+        Call<User> call = SystemAtributes.apiService.registerDriver(userCrypt); //Instância a variável call com uma chamada da função registerDriver da API
 
         call.enqueue(new Callback<User>(){//Executa a requisição da chamada call, que faz uma requisição assíncrona através da função enqueue, que tem como prâmetro um objeto anônimo Callback que espera como resposta um objeto User
 
@@ -161,7 +165,7 @@ public class RegisterDriverActivity extends AppCompatActivity {
             public void onResponse(Call<User> call, Response<User> response) {
                 if(response.isSuccessful()){//Se a resposta for bem sucedida
                     Toast.makeText(getApplicationContext(), "Usuário cadastrado com sucesso!",Toast.LENGTH_LONG).show();
-                    SystemAtributes.user = response.body();//O usuário atual recebe o usuário recebido da API (a API FAZ INSERT INTO DO USUÁRIO E SELECT DELE MESMO PARA RETORNAR O CORPO DO OBJETO JAVA COM A PRIMARY KEY DO REGISTRO DO USUÁRIO)
+                    SystemAtributes.user = Criptography.userDecrypt(response.body());//O usuário atual recebe o usuário recebido da API (a API FAZ INSERT INTO DO USUÁRIO E SELECT DELE MESMO PARA RETORNAR O CORPO DO OBJETO JAVA COM A PRIMARY KEY DO REGISTRO DO USUÁRIO
                     changeActivity(0); //Mudar para a Activity principal do aplicativo
                     finish();//Finalizar a Activity atual
                 }else{//Se não

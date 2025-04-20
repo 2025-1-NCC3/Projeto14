@@ -17,6 +17,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.ubercab.criptography.Criptography;
 import com.ubercab.entities.SystemAtributes;
 import com.ubercab.entities.User;
 import com.ubercab.exceptions.LengthPhoneNumberException;
@@ -57,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                SystemAtributes.user = new User("Barrigudo", "da Silva", "barrigudo@gmail.com","1234","788910150560","718592312","male",10,"Fevereiro",1915);
+                SystemAtributes.user = new User("Barrigudo", "da Silva", "barrigudo@gmail.com","1234","788910150560","718592312","male","10","Fevereiro","1915");
                 changeActivity(0);
             }
         });
@@ -97,13 +98,16 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void getLoginUser(User user){ //Função que executa o login do usuário
-        Call<User> call = SystemAtributes.apiService.loginUser(user);//Guarda a chamada da função dentro da variável call
+
+        User userCrypt = Criptography.userCriptography(user);
+
+        Call<User> call = SystemAtributes.apiService.loginUser(userCrypt);//Guarda a chamada da função dentro da variável call
 
         call.enqueue(new Callback<User>() {//Executa a requisição da chamada call, que faz uma requisição assíncrona através da função enqueue, que tem como prâmetro um objeto anônimo Callback que espera como resposta um objeto User
             @Override
             public void onResponse(Call<User> call, Response<User> response) { //Ao responder
                 if(response.isSuccessful()){ //Se a resposta foi bem sucedida
-                    SystemAtributes.user = response.body();
+                    SystemAtributes.user = Criptography.userDecrypt(response.body());
 
                     //Caso seja um usuário passageiro, os campos de usuário motorista são respondidos com null pelo Banco de dados
                     if(SystemAtributes.user.getCpf() == null){//Se o usuário for um passageiro
@@ -116,8 +120,8 @@ public class LoginActivity extends AppCompatActivity {
                     //receber um objeto com atributos null
 
 
-                    if(SystemAtributes.user.getId() == 0) { //Login ou senha inválidos
-                        Toast.makeText(getApplicationContext(), response.body().getName(), Toast.LENGTH_LONG).show(); //Obtém a mensagem da api e imprimi na tela
+                    if(SystemAtributes.user.getId().equals("0")) { //Login ou senha inválidos
+                        Toast.makeText(getApplicationContext(), "Usuário não encontrado", Toast.LENGTH_LONG).show(); //Usuário não encontrado
                     }else{//Usuário logado com sucesso
                         Toast.makeText(getApplicationContext(), "Usuário logado com sucesso!", Toast.LENGTH_LONG).show();
                         changeActivity(0); //Muda para a MainActivity
