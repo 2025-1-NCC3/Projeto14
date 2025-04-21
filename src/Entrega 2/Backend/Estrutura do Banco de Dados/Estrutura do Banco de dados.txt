@@ -1,0 +1,31 @@
+create table UserPassenger(
+    id int PRIMARY KEY IDENTITY(1,1),
+    name varchar(255),
+    lastName varchar(255),
+    email varchar(255),
+    phoneNumber varchar(255),
+    password varchar(255),
+
+    emergencyCode varchar(255),
+    uAudioCode varchar(255),
+    commandVoice varchar(255)
+);
+
+create table UserDriver(
+    id int PRIMARY KEY IDENTITY(1,1),
+    name varchar(255),
+    lastName varchar(255),
+    email varchar(255),
+    phoneNumber varchar(255),
+    password varchar(255),
+    cpf varchar(255),
+    rg varchar(255),
+    gender varchar(255)
+    dayBirthday varchar(255),
+    monthBirthday varchar(255),
+    yearBirthday varchar(255),
+
+    emergencyCode varchar(255),
+    uAudioCode varchar(255),
+    commandVoice varchar(255)
+);
