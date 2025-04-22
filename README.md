@@ -14,10 +14,10 @@
 
 ## Descrição
 
-<p align="center">
+<!--<p align="center">
 <img src="https://pix4free.org/assets/library/2021-01-20/originals/game.jpg" alt="NOME DO JOGO" border="0">
   Game by <a href="http://www.nyphotographic.com/">Nick Youngson</a> <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a> <a href="http://pix4free.org/">Pix4free</a>
-</p>
+</p>-->
 
 
 Este projeto traz uma camada extra de segurança para o aplicativo da Uber, permitindo que usuários e motoristas ativem uma senha por voz em situações de risco. Com um simples comando falado, o sistema envia um alerta silencioso ao centro de monitoramento e às autoridades, garantindo uma resposta rápida e aumentando a sensação de proteção durante as corridas.
