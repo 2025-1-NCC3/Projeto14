@@ -69,8 +69,8 @@ Raiz/<br>
 
 | Versão | Data | Descrição | Link |
 |--------|------|-----------|------|
-| `v0.1.0-alpha` | 27-03-2025 | Entrega 1 - estrutura inicial do projeto, autenticação e navegação básica | [🔗 Ver release](https://github.com/2025-1-NCC3/Projeto14/releases/tag/v0.1.0-alpha) |
-| `v1.0-beta` | 22-04-2025 | Entrega 2 - integração com backend, implementação da criptografia | [🔗 Ver release](https://github.com/2025-1-NCC3/Projeto14/releases/tag/v1.0-beta) |
+| `v0.1.0` | 27-03-2025 | Entrega 1 - estrutura inicial do projeto, autenticação e navegação básica | [🔗 Release](https://github.com/2025-1-NCC3/Projeto14/releases/tag/v0.1.0-alpha) |
+| `v1.0.0` | 22-04-2025 | Entrega 2 - integração com backend, implementação da criptografia | [🔗 Release](https://github.com/2025-1-NCC3/Projeto14/releases/tag/v1.0-beta) |
 | `vX.X.X` | _a definir_ | Entrega 3  | _Em breve_ |
 | `vX.X.X` | _a definir_ | Entrega 4 | _Em breve_ |
 
