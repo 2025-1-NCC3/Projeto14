@@ -14,60 +14,67 @@
 
 ## Descrição
 
-<p align="center">
+<!--<p align="center">
 <img src="https://pix4free.org/assets/library/2021-01-20/originals/game.jpg" alt="NOME DO JOGO" border="0">
   Game by <a href="http://www.nyphotographic.com/">Nick Youngson</a> <a rel="license" href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a> <a href="http://pix4free.org/">Pix4free</a>
-</p>
+</p>-->
 
 
-De um a dois parágrafos sobre o que é seu projeto e o que ele faz.
-<br><br>
-Meu projeto ajuda estudantes FECAP a configurarem seus githubs.
-<br><br>
+Este projeto traz uma camada extra de segurança para o aplicativo da Uber, permitindo que usuários e motoristas ativem uma senha por voz em situações de risco. Com um simples comando falado, o sistema envia um alerta silencioso ao centro de monitoramento e às autoridades, garantindo uma resposta rápida e aumentando a sensação de proteção durante as corridas.
 
 
-## 🛠 Estrutura de pastas
+## 🛠 Estrutura de Pastas
 
--Raiz<br>
-|<br>
-|-->documentos<br>
-  &emsp;|-->Entrega 1<br>
-  &emsp;&emsp;|-->Análise Descritiva de Dados<br>
-  &emsp;&emsp;|-->Programação Orientada a Objetivos e Estrutura de Dados<br>
-  &emsp;&emsp;|-->Programação para Dispositivos Móveis<br>
-  &emsp;&emsp;|-->Projeto Interdisciplinar Aplicativo Móvel<br>
-    &emsp;|-->Entrega 2<br>
-  &emsp;&emsp;|-->Análise Descritiva de Dados<br>
-  &emsp;&emsp;|-->Programação Orientada a Objetivos e Estrutura de Dados<br>
-  &emsp;&emsp;|-->Programação para Dispositivos Móveis<br>
-  &emsp;&emsp;|-->Projeto Interdisciplinar Aplicativo Móvel<br>
-    &emsp;|-->Entrega 3<br>
-  &emsp;&emsp;|-->Análise Descritiva de Dados<br>
-  &emsp;&emsp;|-->Programação Orientada a Objetivos e Estrutura de Dados<br>
-  &emsp;&emsp;|-->Programação para Dispositivos Móveis<br>
-  &emsp;&emsp;|-->Projeto Interdisciplinar Aplicativo Móvel<br>
-    &emsp;|-->Entrega 4<br>
-  &emsp;&emsp;|-->Análise Descritiva de Dados<br>
-  &emsp;&emsp;|-->Programação Orientada a Objetivos e Estrutura de Dados<br>
-  &emsp;&emsp;|-->Programação para Dispositivos Móveis<br>
-  &emsp;&emsp;|-->Projeto Interdisciplinar Aplicativo Móvel<br>
-  &emsp;|README.md<br>
-|-->imagens<br>
-|-->src<br>
-  &emsp;|-->Entrega 1<br>
-  &emsp;&emsp;|-->Backend<br>
-  &emsp;&emsp;|-->Frontend<br>
-  &emsp;|-->Entrega 2<br>
-  &emsp;&emsp;|-->Backend<br>
-  &emsp;&emsp;|-->Frontend<br>
-  &emsp;|-->Entrega 3<br>
-  &emsp;&emsp;|-->Backend<br>
-  &emsp;&emsp;|-->Frontend<br>
-  &emsp;|-->Entrega 4<br>
-  &emsp;&emsp;|-->Backend<br>
-  &emsp;&emsp;|-->Frontend<br>
-|.gitignore<br>
-|readme.md<br>
+Raiz/<br>
+&emsp;├── documentos/<br>
+&emsp;&emsp;├── Entrega 1/<br>
+&emsp;&emsp;&emsp;├── Análise Descritiva de Dados/<br>
+&emsp;&emsp;&emsp;├── Programação Orientada a Objetivos e Estrutura de Dados/<br>
+&emsp;&emsp;&emsp;├── Programação para Dispositivos Móveis/<br>
+&emsp;&emsp;&emsp;└── Projeto Interdisciplinar Aplicativo Móvel/<br>
+&emsp;&emsp;├── Entrega 2/<br>
+&emsp;&emsp;&emsp;├── Análise Descritiva de Dados/<br>
+&emsp;&emsp;&emsp;├── Programação Orientada a Objetivos e Estrutura de Dados/<br>
+&emsp;&emsp;&emsp;├── Programação para Dispositivos Móveis/<br>
+&emsp;&emsp;&emsp;└── Projeto Interdisciplinar Aplicativo Móvel/<br>
+&emsp;&emsp;├── Entrega 3/<br>
+&emsp;&emsp;&emsp;├── Análise Descritiva de Dados/<br>
+&emsp;&emsp;&emsp;├── Programação Orientada a Objetivos e Estrutura de Dados/<br>
+&emsp;&emsp;&emsp;├── Programação para Dispositivos Móveis/<br>
+&emsp;&emsp;&emsp;└── Projeto Interdisciplinar Aplicativo Móvel/<br>
+&emsp;&emsp;├── Entrega 4/<br>
+&emsp;&emsp;&emsp;├── Análise Descritiva de Dados/<br>
+&emsp;&emsp;&emsp;├── Programação Orientada a Objetivos e Estrutura de Dados/<br>
+&emsp;&emsp;&emsp;├── Programação para Dispositivos Móveis/<br>
+&emsp;&emsp;&emsp;└── Projeto Interdisciplinar Aplicativo Móvel/<br>
+&emsp;&emsp;└── README.md<br>
+&emsp;├── imagens/<br>
+&emsp;├── src/<br>
+&emsp;&emsp;├── Entrega 1/<br>
+&emsp;&emsp;&emsp;├── Backend/<br>
+&emsp;&emsp;&emsp;└── Frontend/<br>
+&emsp;&emsp;├── Entrega 2/<br>
+&emsp;&emsp;&emsp;├── Backend/<br>
+&emsp;&emsp;&emsp;└── Frontend/<br>
+&emsp;&emsp;├── Entrega 3/<br>
+&emsp;&emsp;&emsp;├── Backend/<br>
+&emsp;&emsp;&emsp;└── Frontend/<br>
+&emsp;&emsp;└── Entrega 4/<br>
+&emsp;&emsp;&emsp;├── Backend/<br>
+&emsp;&emsp;&emsp;└── Frontend/<br>
+&emsp;├── .gitignore<br>
+&emsp;└── README.md<br>
+
+## 📦 Versões / Lançamentos
+
+| Versão | Data | Descrição | Link |
+|--------|------|-----------|------|
+| `v0.1.0` | 27-03-2025 | Entrega 1 - estrutura inicial do projeto, autenticação e navegação básica | [🔗 Release](https://github.com/2025-1-NCC3/Projeto14/releases/tag/v0.1.0-alpha) |
+| `v1.0.0` | 22-04-2025 | Entrega 2 - integração com backend, implementação da criptografia | [🔗 Release](https://github.com/2025-1-NCC3/Projeto14/releases/tag/v1.0-beta) |
+| `vX.X.X` | _a definir_ | Entrega 3  | _Em breve_ |
+| `vX.X.X` | _a definir_ | Entrega 4 | _Em breve_ |
+
+> ℹ️ Todas as versões estão disponíveis na aba [Releases](https://github.com/2025-1-NCC3/Projeto14/releases).
 
 ## 🛠 Instalação
 
@@ -95,8 +102,4 @@ Build.gradle(Module) -> Sync Now
 Aqui estão as referências usadas no projeto.
 
 1. <https://github.com/iuricode/readme-template>
-2. <https://github.com/gabrieldejesus/readme-model>
-3. <https://chooser-beta.creativecommons.org/>
-4. 
-5. <https://www.toptal.com/developers/gitignore>
-6. Músicas por: <a href="https://freesound.org/people/DaveJf/sounds/616544/"> DaveJf </a> e <a href="https://freesound.org/people/DRFX/sounds/338986/"> DRFX </a> ambas com Licença CC 0.
+
