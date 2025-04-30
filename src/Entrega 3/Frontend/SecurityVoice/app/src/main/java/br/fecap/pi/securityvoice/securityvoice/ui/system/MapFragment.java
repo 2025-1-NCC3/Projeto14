@@ -87,12 +87,16 @@ import com.mapbox.search.autocomplete.PlaceAutocompleteSuggestion;
 import com.mapbox.search.ui.adapter.autocomplete.PlaceAutocompleteUiAdapter;
 import com.mapbox.search.ui.view.CommonSearchViewConfiguration;
 import com.mapbox.search.ui.view.SearchResultsView;
+
+import br.fecap.pi.securityvoice.criptography.Criptography;
 import br.fecap.pi.securityvoice.entities.SystemAtributes;
+import br.fecap.pi.securityvoice.entities.Travel;
 import br.fecap.pi.securityvoice.resources.SpeechRecognizerClass;
 import br.fecap.pi.securityvoice.resources.SpeechRecognizerTypeExecution;
 import br.fecap.pi.securityvoice.R;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -101,6 +105,9 @@ import kotlin.coroutines.Continuation;
 import kotlin.coroutines.CoroutineContext;
 import kotlin.coroutines.EmptyCoroutineContext;
 import kotlin.jvm.functions.Function1;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MapFragment extends Fragment {
 
@@ -195,11 +202,11 @@ public class MapFragment extends Fragment {
             new ActivityResultContracts.RequestPermission(),
             isGranted -> {
                 if (isGranted) {
-                    Toast.makeText(requireContext(), "Permissão concedida! Reiniciar o app ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "Permissão concedida! ", Toast.LENGTH_SHORT).show();
                     startLocationServices();
                 } else {
                     // Mostrar mensagem ao usuário
-                    Toast.makeText(requireContext(), "Caso a localização não apareça reinicie o app", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "Permissão não concedida!", Toast.LENGTH_SHORT).show();
                 }
             }
     );
@@ -419,6 +426,54 @@ public class MapFragment extends Fragment {
                             public void onClick(View view) {
                                 fetchRoute(placeAutocompleteSuggestion.getCoordinate());
                                 setRoute.setVisibility(View.GONE);
+
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException e) {
+                                    throw new RuntimeException(e);
+                                }
+
+                                Integer id = 0;
+                                Integer driverId = 0;
+                                Integer passengerId = SystemAtributes.user.getId();
+
+                                Double distance = 0.0; //Colocar aqui a quilometragem
+
+                                String destination = "COLOCAR AQUI O DESTINO";
+                                String origin = "COLOCAR AQUI A ORIGEM";
+                                String cust = "R$ " + (distance * 2.0);
+                                String date = new Date().toString();
+
+                                double time = (distance / 30) * 60 * 60;
+                                String duration = getDuration(time);
+
+                                String driverName = "NaN";
+                                String passengerName = SystemAtributes.user.getName();
+                                String state = "WAITING";
+
+
+                                SystemAtributes.travel = new Travel(id,driverId,passengerId,destination, origin,date,cust,duration,driverName, passengerName, state);
+
+                                Travel travelCrypt = Criptography.travelCriptography(SystemAtributes.travel);
+
+                                Call<Travel> call = SystemAtributes.apiService.requestingTravel(travelCrypt);
+
+                                call.enqueue(new Callback<Travel>() {
+                                    @Override
+                                    public void onResponse(Call<Travel> call, Response<Travel> response) {
+                                        if(response.isSuccessful()){
+                                            Toast.makeText(getActivity().getApplicationContext(), "Viagem solicitada com sucesso!", Toast.LENGTH_LONG).show();
+                                            SystemAtributes.travel = Criptography.travelDecrypt(response.body());
+                                        }else{
+                                            Toast.makeText(getActivity().getApplicationContext(), "Falha ao solicitar viagem!", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<Travel> call, Throwable throwable) {
+                                        Toast.makeText(getActivity().getApplicationContext(), "Servidor não responde!", Toast.LENGTH_LONG).show();
+                                    }
+                                });
                             }
                         });
                     }
@@ -507,5 +562,26 @@ public class MapFragment extends Fragment {
             mapboxNavigation.unregisterLocationObserver(locationObserver);
             mapboxNavigation.onDestroy();
         }
+    }
+
+    public String getDuration(Double time){
+        String duration;
+
+        int h = 0;
+        int min = 0;
+        int sec = 0;
+        while(time > 0.0) {
+            for (int m = 0; m < 60 && time > 0.0; m++) {
+                min = m;
+                for (int s = 0; s < 60 && time > 0.0; s++) {
+                    sec = s;
+                    time -= 1;
+                }
+            }
+            h++;
+
+        }
+        duration = (h - 1) + ":" + min + ":" + sec;
+        return duration;
     }
 }

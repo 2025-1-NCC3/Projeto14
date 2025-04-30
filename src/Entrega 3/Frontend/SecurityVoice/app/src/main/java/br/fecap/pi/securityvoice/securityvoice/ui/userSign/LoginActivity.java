@@ -17,6 +17,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import com.google.android.material.textfield.TextInputEditText;
+
+import java.util.Date;
+
 import br.fecap.pi.securityvoice.criptography.Criptography;
 import br.fecap.pi.securityvoice.entities.SystemAtributes;
 import br.fecap.pi.securityvoice.entities.User;
@@ -53,6 +56,8 @@ public class LoginActivity extends AppCompatActivity {
         registerButton = findViewById(R.id.registerButton);
 
         testProfileButton = findViewById(R.id.testProfileButton);
+
+
 
         testProfileButton.setOnClickListener(new View.OnClickListener(){
 

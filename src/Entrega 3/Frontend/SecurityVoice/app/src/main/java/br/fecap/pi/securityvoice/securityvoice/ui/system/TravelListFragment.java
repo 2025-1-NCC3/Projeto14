@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,8 @@ import br.fecap.pi.securityvoice.entities.SystemAtributes;
 import br.fecap.pi.securityvoice.entities.Travel;
 import br.fecap.pi.securityvoice.resources.Adapter;
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class TravelListFragment extends Fragment {
 
@@ -68,7 +71,22 @@ public class TravelListFragment extends Fragment {
     }
 
     public void refresh(){
-        //Call<List<Travel>> call = new SystemAtributes.apiService.
+        Call<List<Travel>> call = SystemAtributes.apiService.refreshDriverTravel();
 
+        call.enqueue(new Callback<List<Travel>>() {
+            @Override
+            public void onResponse(Call<List<Travel>> call, Response<List<Travel>> response) {
+                if(response.isSuccessful()) {
+                    listTravel = response.body();
+                }else{
+                    Toast.makeText(getActivity().getApplicationContext(), "Falha ao carregar solicitações de viagem!", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Travel>> call, Throwable throwable) {
+                Toast.makeText(getActivity().getApplicationContext(), "Servidor não responde!", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

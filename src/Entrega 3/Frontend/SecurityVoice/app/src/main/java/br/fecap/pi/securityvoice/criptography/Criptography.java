@@ -2,6 +2,7 @@ package br.fecap.pi.securityvoice.criptography;
 
 import android.os.Build;
 
+import br.fecap.pi.securityvoice.entities.Travel;
 import br.fecap.pi.securityvoice.entities.User;
 
 import java.security.spec.KeySpec;
@@ -85,6 +86,52 @@ public class Criptography {
 
 
         return userOriginal;
+    }
+
+    public static Travel travelCriptography(Travel travel){
+
+        Travel travelCrypt = new Travel();
+
+        try{
+            travelCrypt.setId(travel.getId());
+            travelCrypt.setDriverId(travel.getDriverId());
+            travelCrypt.setPassengerId(travel.getPassengerId());
+            travelCrypt.setDestination(crypt(travel.getDestination()));
+            travelCrypt.setOrigin((crypt(travel.getOrigin())));
+            travelCrypt.setDate(crypt(travel.getDate()));
+            travelCrypt.setCust(crypt(travel.getCust()));
+            travelCrypt.setDuration(crypt(travel.getDuration()));
+            travelCrypt.setDriverName(crypt(travel.getDriverName()));
+            travelCrypt.setPassengerName(crypt(travel.getPassengerName()));
+            travelCrypt.setState(crypt(travel.getState()));
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+
+        return travelCrypt;
+    }
+
+    public static Travel travelDecrypt(Travel travel){
+
+        Travel travelDecrypt = new Travel();
+
+        try{
+            travelDecrypt.setId(travel.getId());
+            travelDecrypt.setDriverId(travel.getDriverId());
+            travelDecrypt.setPassengerId(travel.getPassengerId());
+            travelDecrypt.setDestination(decrypt(travel.getDestination()));
+            travelDecrypt.setOrigin((decrypt(travel.getOrigin())));
+            travelDecrypt.setDate(decrypt(travel.getDate()));
+            travelDecrypt.setCust(decrypt(travel.getCust()));
+            travelDecrypt.setDuration(decrypt(travel.getDuration()));
+            travelDecrypt.setDriverName(decrypt(travel.getDriverName()));
+            travelDecrypt.setPassengerName(decrypt(travel.getPassengerName()));
+            travelDecrypt.setState(decrypt(travel.getState()));
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+
+        return travelDecrypt;
     }
 
     public static String crypt(String code) throws Exception {

@@ -1,9 +1,13 @@
 package br.fecap.pi.securityvoice.resources;
 
+import java.util.List;
+
+import br.fecap.pi.securityvoice.entities.Travel;
 import br.fecap.pi.securityvoice.entities.User;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 public interface ApiService {
@@ -31,5 +35,11 @@ public interface ApiService {
 
     @POST("securityVoiceConfigurationPassenger")
     Call<User> securityVoiceConfigurationPassenger(@Body User user); //Endereço da API para atualizar as configurações de SecurityVoice de um passageiro
+
+    @GET("refreshDriverTravel")
+    Call<List<Travel>> refreshDriverTravel();
+
+    @POST("requestingTravel")
+    Call<Travel> requestingTravel(@Body Travel travel);
 
     }

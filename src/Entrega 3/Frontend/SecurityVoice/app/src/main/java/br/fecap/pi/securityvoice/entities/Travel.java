@@ -14,6 +14,10 @@ public class Travel {
     private String passengerName;
     private String state;
 
+    public Travel(){
+        
+    }
+
     public Travel(Integer id, Integer driverId, Integer passengerId, String destination, String origin, String date, String cust, String duration, String driverName, String passengerName, String state) {
         this.id = id;
         this.driverId = driverId;
