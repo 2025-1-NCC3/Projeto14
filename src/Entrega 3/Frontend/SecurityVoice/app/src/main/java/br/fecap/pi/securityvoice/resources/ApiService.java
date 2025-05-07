@@ -13,8 +13,10 @@ import retrofit2.http.POST;
 public interface ApiService {
     @POST("loginUser")
     Call<User> loginUser(@Body User user); //Endereço da api para logar o usuário
+
     @POST("registerDriver")
     Call<User> registerDriver(@Body User user); //Endereço da API para registrar um motorista
+
     @POST("registerPassenger")
     Call<User> registerPassenger(@Body User user); //Endereço da API para registrar um passageiro
 
@@ -42,4 +44,15 @@ public interface ApiService {
     @POST("requestingTravel")
     Call<Travel> requestingTravel(@Body Travel travel);
 
-    }
+    @POST("cancelTravel")
+    Call<Travel> cancelTravel(@Body Travel travel);
+
+    @POST("waitingDriver")
+    Call<Travel> waitingDriver(@Body Travel travel);
+
+    @POST("acceptingTravel")
+    Call<Travel> acceptingTravel(@Body Travel travel);
+
+    @POST("travelFinish")
+    Call<Travel> travelFinish(@Body Travel travel);
+}

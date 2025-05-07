@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,12 +12,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import br.fecap.pi.securityvoice.R;
+import br.fecap.pi.securityvoice.criptography.Criptography;
 import br.fecap.pi.securityvoice.entities.SystemAtributes;
 import br.fecap.pi.securityvoice.entities.Travel;
 
+import br.fecap.pi.securityvoice.securityvoice.ui.system.TravelListFragment;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class Adapter extends RecyclerView.Adapter<Adapter.TravelViewHolder>{
 
-    private List<Travel> listTravel;
+    public static List<Travel> listTravel;
 
     public Adapter(List<Travel> listTravel){
         this.listTravel = listTravel;
@@ -65,10 +72,19 @@ public class Adapter extends RecyclerView.Adapter<Adapter.TravelViewHolder>{
         }else{
             holder.nameTextView.setText(travel.getDriverName());
         }
+
     }
 
     @Override
     public int getItemCount() {
         return listTravel.size();
+    }
+
+    public List<Travel> getListTravel() {
+        return listTravel;
+    }
+
+    public void setListTravel(List<Travel> listTravel) {
+        this.listTravel = listTravel;
     }
 }

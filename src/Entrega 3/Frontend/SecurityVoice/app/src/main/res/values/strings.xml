@@ -241,6 +241,15 @@
     <string name="profile_AccountInformation_cancelButton">Voltar</string>
     <string name="profile_AccountInformation_updateButton">Atualizar</string>
     <string name="profile_AccountInformation_deleteButton">Deletar Conta</string>
+
+    <string name="mapFragment_passenger_waitingDriver">Aguardando motorista...</string>
+    <string name="mapFragment_passenger_travelAccepted">Viagem aceita!</string>
+    <string name="mapFragment_passenger_travelAccepted_plate">BJT-8866</string>
+    <string name="mapFragment_passenger_travelAccepted_carModel">Chevrolet-Spin</string>
+    <string name="mapFragment_passenger_travelAccepted_carColor">Verde</string>
+    <string name="mapFragment_driver_acceptingTravel_button">Encerrar Viagem</string>
+    <string name="travel_cancelTravel">Cancelar</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <!-- TODO: Remove or change this placeholder text -->

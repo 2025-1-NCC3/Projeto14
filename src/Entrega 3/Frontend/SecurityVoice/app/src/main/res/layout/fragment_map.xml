@@ -1,55 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:circularflow_defaultRadius="100dp"
     tools:context="br.fecap.pi.securityvoice.securityvoice.ui.system.MapFragment">
 
     <!-- Mapa ocupando toda a tela -->
+
     <com.mapbox.maps.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
+
+    </com.mapbox.maps.MapView>
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/searchLayout"
+        style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64sp"
         android:layout_marginStart="10sp"
+        android:layout_marginTop="64sp"
         android:layout_marginEnd="10sp"
         android:elevation="4dp"
         android:hint="Search"
-        android:id="@+id/searchLayout"
         app:boxCornerRadiusBottomEnd="20sp"
         app:boxCornerRadiusBottomStart="20sp"
         app:boxCornerRadiusTopEnd="20sp"
         app:boxCornerRadiusTopStart="20sp"
-        app:boxStrokeWidthFocused="0sp"
         app:boxStrokeWidth="0sp"
-        app:startIconDrawable="@drawable/outline_map_search_24"
-        style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense">
+        app:boxStrokeWidthFocused="0sp"
+        app:startIconDrawable="@drawable/outline_map_search_24">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/searchET"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text"
-            android:id="@+id/searchET" />
+            android:inputType="text" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.mapbox.search.ui.view.SearchResultsView
+        android:id="@+id/search_results_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/search_results_view"
+        android:layout_below="@id/searchLayout"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="16dp"
-        android:visibility="gone"
         android:elevation="4dp"
         android:paddingTop="8dp"
         android:paddingBottom="22dp"
-        android:layout_below="@id/searchLayout" />
-
+        android:visibility="gone" />
 
 
     <!-- Botão "Set Route" fixo na parte inferior -->
@@ -66,18 +69,19 @@
 
 
     <!-- Botão flutuante acima do "Set Route" -->
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/focusLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/baseline_my_location_24"
-        android:id="@+id/focusLocation"
-        android:layout_alignParentEnd="true"
         android:layout_above="@id/setRoute"
-        android:layout_margin="16sp"/>
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16sp"
+        android:src="@drawable/baseline_my_location_24" />
 
     <SearchView
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
 
     </SearchView> <!-- Move para cima sem precisar de constraints -->
 
@@ -85,13 +89,249 @@
         android:id="@+id/dica"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="200dp"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="200dp"
         android:layout_marginEnd="10dp"
+        android:layout_weight="1"
         android:text="TextView"
-        android:textStyle="bold"
         android:textSize="18sp"
-        />
+        android:textStyle="bold" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/acceptingTravel"
+            android:visibility="invisible"
+            android:layout_width="411dp"
+            android:layout_height="258dp"
+            android:background="@drawable/panel_model"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.77">
+
+            <Button
+                android:id="@+id/travelFinish"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="40dp"
+                android:text="@string/mapFragment_driver_acceptingTravel_button"
+                android:textColor="@color/black"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/travelAccepted"
+            android:layout_width="393dp"
+            android:layout_height="242dp"
+            android:layout_marginBottom="130dp"
+            android:visibility="invisible"
+            android:background="@drawable/panel_model"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:id="@+id/x"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="24dp"
+                android:text="x"
+                android:textSize="28sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:shadowColor="@color/white"
+                android:shadowRadius="8"
+                android:text="@string/mapFragment_passenger_travelAccepted"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout2"
+                android:layout_width="371dp"
+                android:layout_height="152dp"
+                android:layout_marginStart="1dp"
+                android:layout_marginEnd="1dp"
+                android:layout_marginBottom="2dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView16">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:layout_weight="100"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/destinationTravelAccepted"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="TextView"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/originTravelAccepted"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="TextView" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/dateTravelAccepted"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="TextView" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/custTravelAccpeted"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="100"
+                        android:text="TextView" />
+
+                    <TextView
+                        android:id="@+id/durationTravelAccepted"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="100"
+                        android:text="TextView" />
+
+                    <TextView
+                        android:id="@+id/driverNameTravelAccepted"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="100"
+                        android:text="TextView" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/imageView4"
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/baseline_directions_car_72" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/textView27"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/mapFragment_passenger_travelAccepted_plate" />
+
+                        <TextView
+                            android:id="@+id/textView26"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/mapFragment_passenger_travelAccepted_carModel" />
+
+                        <TextView
+                            android:id="@+id/textView24"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/mapFragment_passenger_travelAccepted_carColor" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/textView25"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="TextView" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/waitingDriver"
+            android:visibility="invisible"
+            android:layout_width="258dp"
+            android:layout_height="189dp"
+            android:background="@drawable/panel_model"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.496"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.778">
+
+            <TextView
+                android:id="@+id/textView15"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="15dp"
+                android:text="@string/mapFragment_passenger_waitingDriver"
+                android:textAlignment="center"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/cancelTravel"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.22000003" />
+
+            <Button
+                android:id="@+id/cancelTravel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/travel_cancelTravel"
+                android:textColor="@color/black"
+                android:onClick="cancelTravel"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView15" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </RelativeLayout>

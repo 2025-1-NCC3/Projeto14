@@ -6,7 +6,9 @@ import br.fecap.pi.securityvoice.entities.Travel;
 import br.fecap.pi.securityvoice.entities.User;
 
 import java.security.spec.KeySpec;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -16,16 +18,24 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class Criptography {
 
-    public static SecretKey gerarChaveSegura(String senha) throws Exception {
-        byte[] saltFixo = "meuSaltFixo1234".getBytes(); //
-        int iteracoes = 65536;
-        int tamanhoChave = 128; //
+    public static SecretKey chaveSegura = gerarChaveSegura("senhaSuperSecreta123");
 
-        SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-        KeySpec spec = new PBEKeySpec(senha.toCharArray(), saltFixo, iteracoes, tamanhoChave);
-        byte[] chaveDerivada = factory.generateSecret(spec).getEncoded();
+    public static SecretKey gerarChaveSegura(String senha)  {
+        try {
+            byte[] saltFixo = "meuSaltFixo1234".getBytes(); //
+            int iteracoes = 65536;
+            int tamanhoChave = 128; //
 
-        return new SecretKeySpec(chaveDerivada, "AES");
+            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+            KeySpec spec = new PBEKeySpec(senha.toCharArray(), saltFixo, iteracoes, tamanhoChave);
+            byte[] chaveDerivada = factory.generateSecret(spec).getEncoded();
+            return new SecretKeySpec(chaveDerivada, "AES");
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            return null;
+        }
+
+
     }
 
 
@@ -103,7 +113,7 @@ public class Criptography {
             travelCrypt.setDuration(crypt(travel.getDuration()));
             travelCrypt.setDriverName(crypt(travel.getDriverName()));
             travelCrypt.setPassengerName(crypt(travel.getPassengerName()));
-            travelCrypt.setState(crypt(travel.getState()));
+            travelCrypt.setStatus(crypt(travel.getStatus()));
         }catch(Exception e){
             System.out.println(e.getMessage());
         }
@@ -126,7 +136,7 @@ public class Criptography {
             travelDecrypt.setDuration(decrypt(travel.getDuration()));
             travelDecrypt.setDriverName(decrypt(travel.getDriverName()));
             travelDecrypt.setPassengerName(decrypt(travel.getPassengerName()));
-            travelDecrypt.setState(decrypt(travel.getState()));
+            travelDecrypt.setStatus(decrypt(travel.getStatus()));
         }catch(Exception e){
             System.out.println(e.getMessage());
         }
@@ -134,8 +144,17 @@ public class Criptography {
         return travelDecrypt;
     }
 
+    public static List<Travel> listTravelDecrypt(List<Travel> list){
+        List<Travel> listDecrypt = new ArrayList<>();
+        for(Travel travel : list){
+            listDecrypt.add(travelDecrypt(travel));
+        }
+
+        return listDecrypt;
+    }
+
     public static String crypt(String code) throws Exception {
-        SecretKey chave = gerarChaveSegura("senhaSuperSecreta123");
+        SecretKey chave = chaveSegura;
         Cipher cipher = Cipher.getInstance("AES");
         cipher.init(Cipher.ENCRYPT_MODE, chave);
         byte[] textoCriptografado = cipher.doFinal(code.getBytes());
@@ -147,7 +166,7 @@ public class Criptography {
 
     public static String decrypt(String code) throws Exception {
         if(code != null){
-            SecretKey chave = gerarChaveSegura("senhaSuperSecreta123");
+            SecretKey chave = chaveSegura;
             Cipher cipher = Cipher.getInstance("AES");
             cipher.init(Cipher.DECRYPT_MODE, chave);
             byte[] textoDecodificado = null;

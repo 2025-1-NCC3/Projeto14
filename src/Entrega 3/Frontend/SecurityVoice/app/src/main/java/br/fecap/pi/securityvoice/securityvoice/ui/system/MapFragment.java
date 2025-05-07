@@ -22,8 +22,10 @@ import android.os.Bundle;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.provider.Settings;
 import android.text.Editable;
@@ -31,6 +33,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -130,6 +133,12 @@ public class MapFragment extends Fragment {
     private final String locationPermission = Manifest.permission.ACCESS_FINE_LOCATION;
 
 
+    private ConstraintLayout waitingDriver;
+    private ConstraintLayout travelAccepted;
+
+    public boolean startAcceptingTravel = false;
+
+    private View mapFragment;
     // Vai ver as mudanças no mapa e atualiza a posição da localização
     private final LocationObserver locationObserver = new LocationObserver() {
         @Override
@@ -269,20 +278,26 @@ public class MapFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_map, container, false);
-
+        mapFragment = view;
         TextView dica = view.findViewById(R.id.dica);
 
-        if (SystemAtributes.user.getEmergencyCode() != "NaN" && SystemAtributes.user.getEmergencyCode() != null) {
+        if (!SystemAtributes.user.getEmergencyCode().equals("NaN") && SystemAtributes.user.getEmergencyCode() != null) {
             SpeechRecognizerClass.startListening(getActivity(), SpeechRecognizerTypeExecution.LISTENING);
             dica.setText("Diga:" + SystemAtributes.user.getEmergencyCode().toString());
         } else {
             dica.setText("Dica: Configure sua Fala de Emergência nas configurações de segurança de SecurityVoice (Faça isso para testar a ideia do aplicativo).");
         }
 
+        if(startAcceptingTravel){
+            acceptingTravel();
+        }
+
         mapView = view.findViewById(R.id.mapView);
         focusLocationBtn = view.findViewById(R.id.focusLocation);
         setRoute = view.findViewById(R.id.setRoute);
 
+        waitingDriver = view.findViewById(R.id.waitingDriver);
+        travelAccepted = view.findViewById(R.id.travelAccepted);
         // Configura e estilizar a linha de rota
         MapboxRouteLineOptions options = new MapboxRouteLineOptions.Builder(requireContext())
                 .withRouteLineResources(new RouteLineResources.Builder().build())
@@ -464,6 +479,8 @@ public class MapFragment extends Fragment {
                                         if(response.isSuccessful()){
                                             Toast.makeText(getActivity().getApplicationContext(), "Viagem solicitada com sucesso!", Toast.LENGTH_LONG).show();
                                             SystemAtributes.travel = Criptography.travelDecrypt(response.body());
+                                            waitingDriver.setVisibility(View.VISIBLE);
+                                            System.out.println(SystemAtributes.travel.getStatus());
                                         }else{
                                             Toast.makeText(getActivity().getApplicationContext(), "Falha ao solicitar viagem!", Toast.LENGTH_LONG).show();
                                         }
@@ -583,5 +600,112 @@ public class MapFragment extends Fragment {
         }
         duration = (h - 1) + ":" + min + ":" + sec;
         return duration;
+    }
+
+    public boolean waitingDriver(){
+
+        while(SystemAtributes.travel.getStatus().equals("WAITING")){
+            Toast.makeText(getActivity().getApplicationContext(), "Nenhum motorista aceitou a corrida até agora!", Toast.LENGTH_LONG).show();
+
+            Travel travelCrypt = Criptography.travelCriptography(SystemAtributes.travel);
+
+            Call<Travel> call = SystemAtributes.apiService.waitingDriver(travelCrypt);
+
+            call.enqueue(new Callback<Travel>() {
+                @Override
+                public void onResponse(Call<Travel> call, Response<Travel> response) {
+                    if(response.isSuccessful()) {
+                        SystemAtributes.travel = Criptography.travelDecrypt(response.body());
+
+                    }else{
+                        Toast.makeText(getActivity().getApplicationContext(), "Falha ao buscar corrida no sistema!", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Travel> call, Throwable throwable) {
+                    Toast.makeText(getActivity().getApplicationContext(), "Servidor não responde!", Toast.LENGTH_LONG).show();
+                }
+            });
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return true;
+    }
+
+    public void travelAccepted (boolean confirm){
+        if(confirm){
+            waitingDriver.setVisibility(View.INVISIBLE);
+            travelAccepted.setVisibility(View.VISIBLE);
+            TextView destination = mapFragment.findViewById(R.id.destinationTravelAccepted);
+            TextView origin = mapFragment.findViewById(R.id.originTravelAccepted);
+            TextView date = mapFragment.findViewById(R.id.dateTravelAccepted);
+            TextView cust = mapFragment.findViewById(R.id.custTravelAccpeted);
+            TextView duration = mapFragment.findViewById(R.id.durationTravelAccepted);
+            TextView driverName = mapFragment.findViewById(R.id.driverNameTravelAccepted);
+            TextView x = mapFragment.findViewById(R.id.x);
+
+            destination.setText(SystemAtributes.travel.getDestination());
+            origin.setText(SystemAtributes.travel.getOrigin());
+            date.setText(SystemAtributes.travel.getDate());
+            cust.setText(SystemAtributes.travel.getCust());
+            duration.setText(SystemAtributes.travel.getDuration());
+            driverName.setText(SystemAtributes.travel.getDriverName());
+
+            x.setOnClickListener(new View.OnClickListener(){
+
+                @Override
+                public void onClick(View v) {
+                    travelAccepted.setVisibility(View.INVISIBLE);
+                    try {
+                        Thread.sleep(20000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    travelAccepted.setVisibility(View.VISIBLE);
+                }
+            });
+        }
+    }
+
+    public void acceptingTravel(){
+        ConstraintLayout acceptingTravel = mapFragment.findViewById(R.id.acceptingTravel);
+        acceptingTravel.setVisibility(View.VISIBLE);
+
+        Button travelFinish = mapFragment.findViewById(R.id.travelFinish);
+
+        travelFinish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Travel travelCrypt = Criptography.travelCriptography(SystemAtributes.travel);
+
+                Call<Travel> call = SystemAtributes.apiService.travelFinish(travelCrypt);
+
+                call.enqueue(new Callback<Travel>() {
+                    @Override
+                    public void onResponse(Call<Travel> call, Response<Travel> response) {
+                        if(response.isSuccessful()){
+                            Toast.makeText(getActivity().getApplicationContext(), "Viagem finalizada com sucesso!", Toast.LENGTH_LONG).show();
+
+                            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction(); //Instânciando um objeto de transação de fragments
+
+                            transaction.replace(R.id.nav_host_fragment_activity_main,new TravelFragment()); //Definindo quando layout receberá o fragmento e sobrescrevendo o layout atual
+                            transaction.commit();//Efetuando alterações da transação
+
+                        }else{
+                            Toast.makeText(getActivity().getApplicationContext(), "Não foi possível finalizar a corrida!", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Travel> call, Throwable throwable) {
+                        Toast.makeText(getActivity().getApplicationContext(), "Servidor não responde!", Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        });
     }
 }

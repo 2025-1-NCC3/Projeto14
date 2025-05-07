@@ -12,13 +12,13 @@ public class Travel {
     private String duration;
     private String driverName;
     private String passengerName;
-    private String state;
+    private String status;
 
     public Travel(){
         
     }
 
-    public Travel(Integer id, Integer driverId, Integer passengerId, String destination, String origin, String date, String cust, String duration, String driverName, String passengerName, String state) {
+    public Travel(Integer id, Integer driverId, Integer passengerId, String destination, String origin, String date, String cust, String duration, String driverName, String passengerName, String status) {
         this.id = id;
         this.driverId = driverId;
         this.passengerId = passengerId;
@@ -29,7 +29,7 @@ public class Travel {
         this.duration = duration;
         this.driverName = driverName;
         this.passengerName = passengerName;
-        this.state = state;
+        this.status = status;
     }
 
     public Integer getId() {
@@ -104,12 +104,12 @@ public class Travel {
         this.passengerName = passengerName;
     }
 
-    public String getState() {
-        return state;
+    public String getStatus() {
+        return status;
     }
 
-    public void setState(String state) {
-        this.state = state;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getOrigin() {
@@ -118,5 +118,22 @@ public class Travel {
 
     public void setOrigin(String origin) {
         this.origin = origin;
+    }
+
+    @Override
+    public String toString() {
+        return "Travel{" +
+                "id=" + id +
+                ", driverId=" + driverId +
+                ", passengerId=" + passengerId +
+                ", destination='" + destination + '\'' +
+                ", origin='" + origin + '\'' +
+                ", date='" + date + '\'' +
+                ", cust='" + cust + '\'' +
+                ", duration='" + duration + '\'' +
+                ", driverName='" + driverName + '\'' +
+                ", passengerName='" + passengerName + '\'' +
+                ", status='" + status + '\'' +
+                '}';
     }
 }

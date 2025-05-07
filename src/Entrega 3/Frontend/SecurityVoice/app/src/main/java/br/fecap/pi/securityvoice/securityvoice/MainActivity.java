@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -19,7 +20,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import br.fecap.pi.securityvoice.R;
+import br.fecap.pi.securityvoice.criptography.Criptography;
 import br.fecap.pi.securityvoice.entities.SystemAtributes;
+import br.fecap.pi.securityvoice.entities.Travel;
 import br.fecap.pi.securityvoice.resources.SpeechRecognizerClass;
 import br.fecap.pi.securityvoice.databinding.ActivityMainBinding;
 import br.fecap.pi.securityvoice.securityvoice.ui.system.AccountInformationFragment;
@@ -30,6 +33,9 @@ import br.fecap.pi.securityvoice.securityvoice.ui.system.SecurityVoiceConfigurat
 import br.fecap.pi.securityvoice.securityvoice.ui.system.TravelFragment;
 import br.fecap.pi.securityvoice.securityvoice.ui.system.TravelListFragment;
 import br.fecap.pi.securityvoice.securityvoice.ui.userSign.LoginActivity;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -78,7 +84,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
+        try {
+            System.out.println(Criptography.crypt("CANCELED"));
+            System.out.println(Criptography.crypt("IN PROGRESS"));
+            System.out.println(Criptography.crypt("COMPLETED"));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         profileMenu.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() { //Se o botão profileMenu da bottom navigation for clicado
             @Override
@@ -170,4 +182,27 @@ public class MainActivity extends AppCompatActivity {
     public void cancelButton(View view){
         changeFragment(new ProfileFragment());
     }//onClick do Botão Voltar do AccountInformationFragment
+
+    public void cancelTravel(View view){
+        Travel travelCrypt = Criptography.travelCriptography(SystemAtributes.travel);
+        Call<Travel> call = SystemAtributes.apiService.cancelTravel(travelCrypt);
+
+        call.enqueue(new Callback<Travel>() {
+            @Override
+            public void onResponse(Call<Travel> call, Response<Travel> response) {
+                if(response.isSuccessful()) {
+                    Toast.makeText(getApplicationContext(), "Viagem cancelada!", Toast.LENGTH_LONG).show();
+                    changeFragment(new TravelFragment());
+
+                }else{
+                    Toast.makeText(getApplicationContext(), "Erro ao cancelar viagem!", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Travel> call, Throwable throwable) {
+                Toast.makeText(getApplicationContext(), "Servidor não responde!", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 }

@@ -1,3 +1,0 @@
-fastapi[all]
-pymssql
-azure-identity
