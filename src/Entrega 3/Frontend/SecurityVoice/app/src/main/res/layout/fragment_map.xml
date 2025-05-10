@@ -133,8 +133,8 @@
             android:layout_width="393dp"
             android:layout_height="242dp"
             android:layout_marginBottom="130dp"
-            android:visibility="invisible"
             android:background="@drawable/panel_model"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
@@ -207,10 +207,11 @@
 
                     <TextView
                         android:id="@+id/dateTravelAccepted"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="50dp"
+                        android:layout_height="60dp"
                         android:layout_weight="1"
-                        android:text="TextView" />
+                        android:text="Thu May 01 18:07:23 GMT 2025"
+                        android:textSize="10sp" />
 
                 </LinearLayout>
 
@@ -259,24 +260,28 @@
 
                         <TextView
                             android:id="@+id/textView27"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_width="171dp"
+                            android:layout_height="29dp"
+                            android:layout_margin="1dp"
                             android:layout_weight="1"
                             android:text="@string/mapFragment_passenger_travelAccepted_plate" />
 
                         <TextView
                             android:id="@+id/textView26"
-                            android:layout_width="match_parent"
+                            android:layout_width="160dp"
                             android:layout_height="wrap_content"
+                            android:layout_margin="1dp"
                             android:layout_weight="1"
                             android:text="@string/mapFragment_passenger_travelAccepted_carModel" />
 
                         <TextView
                             android:id="@+id/textView24"
-                            android:layout_width="wrap_content"
+                            android:layout_width="160dp"
                             android:layout_height="wrap_content"
+                            android:layout_margin="1dp"
                             android:layout_weight="1"
-                            android:text="@string/mapFragment_passenger_travelAccepted_carColor" />
+                            android:text="@string/mapFragment_passenger_travelAccepted_carColor"
+                            android:textAlignment="textStart" />
                     </LinearLayout>
 
                     <TextView

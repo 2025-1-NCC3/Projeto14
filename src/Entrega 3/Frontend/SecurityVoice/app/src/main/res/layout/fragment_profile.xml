@@ -55,6 +55,7 @@
                 android:drawableEnd="@drawable/baseline_arrow_forward_ios_24"
                 android:drawablePadding="10dp"
                 android:outlineSpotShadowColor="@color/white"
+                android:onClick="activityButton"
                 android:text="@string/profile_profileActivity"
                 android:textAlignment="textStart"
                 android:textStyle="bold" />

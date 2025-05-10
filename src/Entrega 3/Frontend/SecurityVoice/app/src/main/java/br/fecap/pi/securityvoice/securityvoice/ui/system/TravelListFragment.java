@@ -25,9 +25,12 @@ import br.fecap.pi.securityvoice.criptography.Criptography;
 import br.fecap.pi.securityvoice.entities.SystemAtributes;
 import br.fecap.pi.securityvoice.entities.Travel;
 import br.fecap.pi.securityvoice.resources.Adapter;
+import br.fecap.pi.securityvoice.securityvoice.MainActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import br.fecap.pi.securityvoice.entities.User;
 
 public class TravelListFragment extends Fragment {
 
@@ -36,6 +39,8 @@ public class TravelListFragment extends Fragment {
     private List<Travel> listTravel = new ArrayList<>();
 
     private Adapter adapter;
+
+    public static int typeRefresh = 0;
 
     public TravelListFragment() {
         // Required empty public constructor
@@ -56,7 +61,11 @@ public class TravelListFragment extends Fragment {
         recyclerView = view.findViewById(R.id.listTravel_Travel);
         refreshButton = view.findViewById(R.id.refreshButton);
 
-        refresh();
+        if(typeRefresh == 0) {
+            refreshDriverTravel();
+        }else{
+            activityRefresh();
+        }
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
@@ -66,41 +75,73 @@ public class TravelListFragment extends Fragment {
         refreshButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                refresh();
+                if(typeRefresh == 0) {
+                    refreshDriverTravel();
+                }else{
+                    activityRefresh();
+                }
             }
         });
 
-        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-            @Override
-            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-                View itemView = rv.findChildViewUnder(e.getX(), e.getY());
+        if(typeRefresh == 0) {
+            recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+                @Override
+                public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+                    View itemView = rv.findChildViewUnder(e.getX(), e.getY());
 
-                if(itemView != null){
-                    int position = rv.getChildAdapterPosition(itemView);
-                    Travel travel = Adapter.listTravel.get(position);
-                    acceptingTravel(travel);
+                    if (itemView != null) {
+                        int position = rv.getChildAdapterPosition(itemView);
+                        Travel travel = Adapter.listTravel.get(position);
+                        acceptingTravel(travel);
 
-                    return true;
+                        return true;
+                    }
+
+                    return false;
                 }
 
-                return false;
-            }
+                @Override
+                public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
 
-            @Override
-            public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+                }
 
-            }
+                @Override
+                public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
 
-            @Override
-            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-            }
-        });
+                }
+            });
+        }
 
         return view;
     }
 
-    public void refresh(){
+    public void activityRefresh(){
+        User userCrypt = Criptography.userCriptography(SystemAtributes.user);
+
+        Call<List<Travel>> call = SystemAtributes.apiService.activityRefresh(userCrypt);
+
+        call.enqueue(new Callback<List<Travel>>() {
+            @Override
+            public void onResponse(Call<List<Travel>> call, Response<List<Travel>> response) {
+                if(response.isSuccessful()) {
+                    listTravel = Criptography.listTravelDecrypt(response.body());
+
+                    adapter = new Adapter(listTravel);
+                    recyclerView.setAdapter(adapter);
+                    Toast.makeText(getActivity().getApplicationContext(), "Lista de viagens atualizada com sucesso!", Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(getActivity().getApplicationContext(), "Falha ao carregar viagens!", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Travel>> call, Throwable throwable) {
+                Toast.makeText(getActivity().getApplicationContext(), "Servidor não responde!", Toast.LENGTH_LONG).show();
+                System.out.println(throwable.getMessage());
+            }
+        });
+    }
+    public void refreshDriverTravel(){
         Call<List<Travel>> call = SystemAtributes.apiService.refreshDriverTravel();
 
         call.enqueue(new Callback<List<Travel>>() {
@@ -144,11 +185,13 @@ public class TravelListFragment extends Fragment {
                     SystemAtributes.travel = Criptography.travelDecrypt(response.body());
                     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction(); //Instânciando um objeto de transação de fragments
 
-                    MapFragment mapFragment = new MapFragment();
+                    if(MainActivity.mapFragment == null) {
+                        MainActivity.mapFragment = new MapFragment();
+                    }
 
-                    mapFragment.startAcceptingTravel = true;
+                    MainActivity.mapFragment.startAcceptingTravel = true;
 
-                    transaction.replace(R.id.nav_host_fragment_activity_main,mapFragment); //Definindo quando layout receberá o fragmento e sobrescrevendo o layout atual
+                    transaction.replace(R.id.nav_host_fragment_activity_main,MainActivity.mapFragment); //Definindo quando layout receberá o fragmento e sobrescrevendo o layout atual
                     transaction.commit();//Efetuando alterações da transação
 
                 }else{

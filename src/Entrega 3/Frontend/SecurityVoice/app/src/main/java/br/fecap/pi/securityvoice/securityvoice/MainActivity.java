@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -22,7 +21,6 @@ import androidx.fragment.app.FragmentTransaction;
 import br.fecap.pi.securityvoice.R;
 import br.fecap.pi.securityvoice.criptography.Criptography;
 import br.fecap.pi.securityvoice.entities.SystemAtributes;
-import br.fecap.pi.securityvoice.entities.Travel;
 import br.fecap.pi.securityvoice.resources.SpeechRecognizerClass;
 import br.fecap.pi.securityvoice.databinding.ActivityMainBinding;
 import br.fecap.pi.securityvoice.securityvoice.ui.system.AccountInformationFragment;
@@ -33,15 +31,14 @@ import br.fecap.pi.securityvoice.securityvoice.ui.system.SecurityVoiceConfigurat
 import br.fecap.pi.securityvoice.securityvoice.ui.system.TravelFragment;
 import br.fecap.pi.securityvoice.securityvoice.ui.system.TravelListFragment;
 import br.fecap.pi.securityvoice.securityvoice.ui.userSign.LoginActivity;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_RECORD_AUDIO = 1; // Código para requisição de permissão de áudio
     private ActivityMainBinding binding;
     private MenuItem travelMenu, securityMenu, profileMenu;
+
+    public static MapFragment mapFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onMenuItemClick(@NonNull MenuItem item) {
 
                 changeFragment(new TravelFragment()); //Mudar para o Fragmento de viagens
-
+                MapFragment.checkFragmentActive = false;
                 return false;
             }
         });
@@ -79,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onMenuItemClick(@NonNull MenuItem item) {
 
                 changeFragment(new SecurityFragment()); //Mudar para o Fragmento de configurações de segurança
-
+                MapFragment.checkFragmentActive = false;
                 return false;
             }
         });
@@ -97,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onMenuItemClick(@NonNull MenuItem item) {
 
                 changeFragment(new ProfileFragment()); //Mudar para o fragmento com informações e configurações da conta e do sistema
+                MapFragment.checkFragmentActive = false;
                 return false;
             }
         });
@@ -113,9 +111,34 @@ public class MainActivity extends AppCompatActivity {
 
     public void travelButton(View view){ //onClick do Botão Viajar do TravelFragment
         if(!SystemAtributes.user.getCpf().equals("NaN")) {
-            changeFragment(new TravelListFragment());
+            if(SystemAtributes.travel != null) {
+                if (!SystemAtributes.travel.getStatus().equals("IN PROGRESS")) {
+                    TravelListFragment.typeRefresh = 0;
+                    changeFragment(new TravelListFragment());
+                } else {
+                    changeFragment(mapFragment);
+
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    mapFragment.acceptingTravelWindowLoad();
+
+                }
+            }else{
+                TravelListFragment.typeRefresh = 0;
+                changeFragment(new TravelListFragment());
+            }
         }else{
-            changeFragment(new MapFragment());
+            if(mapFragment == null){
+                mapFragment = new MapFragment();
+            }
+
+            changeFragment(mapFragment);
+
+            MapFragment.checkFragmentActive = true;
         }
     }
 
@@ -137,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 SystemAtributes.user = null; //Reiniciando o usuário do sistema
+                SystemAtributes.travel = null;
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent); //Voltando para a tela de Login
                 finish();
@@ -155,8 +179,18 @@ public class MainActivity extends AppCompatActivity {
     }
     @Override
     public void onDestroy(){
-        super.onDestroy();
         SpeechRecognizerClass.speechRecognizerDestroy();//Desligar reconhecimento por voz
+        if(SystemAtributes.travel != null) {
+            if(SystemAtributes.travel.getStatus().equals("WAITING")) {
+                mapFragment.cancelTravel();
+                try {
+                    Thread.sleep(20000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        super.onDestroy();
     }
 
     public void speechPermissionConditional(){
@@ -183,26 +217,9 @@ public class MainActivity extends AppCompatActivity {
         changeFragment(new ProfileFragment());
     }//onClick do Botão Voltar do AccountInformationFragment
 
-    public void cancelTravel(View view){
-        Travel travelCrypt = Criptography.travelCriptography(SystemAtributes.travel);
-        Call<Travel> call = SystemAtributes.apiService.cancelTravel(travelCrypt);
-
-        call.enqueue(new Callback<Travel>() {
-            @Override
-            public void onResponse(Call<Travel> call, Response<Travel> response) {
-                if(response.isSuccessful()) {
-                    Toast.makeText(getApplicationContext(), "Viagem cancelada!", Toast.LENGTH_LONG).show();
-                    changeFragment(new TravelFragment());
-
-                }else{
-                    Toast.makeText(getApplicationContext(), "Erro ao cancelar viagem!", Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Travel> call, Throwable throwable) {
-                Toast.makeText(getApplicationContext(), "Servidor não responde!", Toast.LENGTH_LONG).show();
-            }
-        });
+    public void activityButton(View view){
+        TravelListFragment.typeRefresh = 1;
+        changeFragment(new TravelListFragment());
     }
+
 }

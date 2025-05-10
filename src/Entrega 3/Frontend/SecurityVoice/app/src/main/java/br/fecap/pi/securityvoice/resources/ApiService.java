@@ -55,4 +55,7 @@ public interface ApiService {
 
     @POST("travelFinish")
     Call<Travel> travelFinish(@Body Travel travel);
+
+    @POST("activityRefresh")
+    Call<List<Travel>> activityRefresh(@Body User user);
 }

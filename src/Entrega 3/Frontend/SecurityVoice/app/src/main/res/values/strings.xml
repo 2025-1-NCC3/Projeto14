@@ -248,6 +248,7 @@
     <string name="mapFragment_passenger_travelAccepted_carModel">Chevrolet-Spin</string>
     <string name="mapFragment_passenger_travelAccepted_carColor">Verde</string>
     <string name="mapFragment_driver_acceptingTravel_button">Encerrar Viagem</string>
+    <string name="mapFragment_button_requestTravel">Solicitar Viagem</string>
     <string name="travel_cancelTravel">Cancelar</string>
 
     <!-- TODO: Remove or change this placeholder text -->

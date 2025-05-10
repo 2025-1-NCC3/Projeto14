@@ -125,7 +125,7 @@ public class LoginActivity extends AppCompatActivity {
                     //receber um objeto com atributos null
 
 
-                    if(SystemAtributes.user.getId().equals(0)) { //Login ou senha inválidos
+                    if(SystemAtributes.user.getId().equals(0) || SystemAtributes.user.getId() == null) { //Login ou senha inválidos
                         Toast.makeText(getApplicationContext(), "Usuário não encontrado", Toast.LENGTH_LONG).show(); //Usuário não encontrado
                     }else{//Usuário logado com sucesso
                         Toast.makeText(getApplicationContext(), "Usuário logado com sucesso!", Toast.LENGTH_LONG).show();
