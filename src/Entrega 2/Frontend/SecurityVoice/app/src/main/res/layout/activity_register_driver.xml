@@ -12,6 +12,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
+        android:maxHeight="200dp"
+        android:minHeight="100dp"
+        android:maxWidth="200dp"
+        android:minWidth="100dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/textInputLayout7"
@@ -36,6 +40,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="37dp"
         android:layout_marginEnd="10dp"
+        android:minWidth="100dp"
         app:layout_constraintEnd_toStartOf="@+id/textInputLayout2"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -45,6 +50,7 @@
             android:id="@+id/driverNameEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minHeight="48dp"
             android:background="@drawable/login_edittexttemplate"
             android:hint="@string/registerDriver_nameEditText" />
 
@@ -57,6 +63,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="37dp"
         android:layout_marginEnd="20dp"
+        android:minWidth="100dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/textInputLayout"
@@ -66,6 +73,7 @@
             android:id="@+id/driverLastNameEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minHeight="48dp"
             android:background="@drawable/login_edittexttemplate"
             android:hint="@string/registerDriver_lastNameEditText" />
 
@@ -78,6 +86,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="10dp"
+        android:minWidth="100dp"
         app:layout_constraintEnd_toStartOf="@+id/textInputLayout3"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -87,6 +96,7 @@
             android:id="@+id/driverCPFEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minHeight="48dp"
             android:background="@drawable/login_edittexttemplate"
             android:hint="@string/registerDriver_cpfEditText" />
 
@@ -99,6 +109,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="20dp"
+        android:minWidth="100dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/textInputLayout6"
@@ -108,6 +119,7 @@
             android:id="@+id/driverRGEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minHeight="48dp"
             android:background="@drawable/login_edittexttemplate"
             android:hint="@string/registerDriver_rgEditText" />
 
@@ -131,9 +143,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="15dp"
-
         android:layout_marginEnd="10dp"
-
+        android:minHeight="48dp"
+        android:minWidth="80dp"
         android:background="@drawable/login_edittexttemplate"
         android:entries="@array/registerDriver_dayDateSpinnerOptions"
         app:layout_constraintEnd_toStartOf="@+id/monthDateSpinner"
@@ -145,11 +157,11 @@
         android:id="@+id/monthDateSpinner"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:minWidth="120dp"
         android:background="@drawable/login_edittexttemplate"
         android:entries="@array/registerDriver_monthDateSpinnerOptions"
-
         app:layout_constraintBaseline_toBaselineOf="@+id/dayDateSpinner"
-
         app:layout_constraintEnd_toStartOf="@+id/yearDateSpinner"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/dayDateSpinner" />
@@ -160,10 +172,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
-
-
+        android:minHeight="48dp"
+        android:minWidth="100dp"
         android:background="@drawable/login_edittexttemplate"
-
         android:entries="@array/registerDriver_yearDateSpinnerOptions"
         app:layout_constraintBaseline_toBaselineOf="@+id/monthDateSpinner"
         app:layout_constraintEnd_toEndOf="parent"
@@ -188,6 +199,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="15dp"
+        android:minHeight="48dp"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4">
@@ -196,6 +208,8 @@
             android:id="@+id/femaleRadioButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:minWidth="120dp"
+            android:minHeight="48dp"
             android:background="@drawable/login_edittexttemplate"
             android:text="@string/registerDriver_genderFemale" />
 
@@ -203,6 +217,8 @@
             android:id="@+id/maleRadioButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minWidth="120dp"
+            android:minHeight="48dp"
             android:background="@drawable/login_edittexttemplate"
             android:text="@string/registerDriver_genderMale" />
     </RadioGroup>
@@ -222,6 +238,7 @@
             android:id="@+id/passwordRegisterDriver"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minHeight="48dp"
             android:background="@drawable/login_edittexttemplate"
             android:hint="@string/registerDriver_password" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -233,6 +250,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="15dp"
         android:layout_marginEnd="10dp"
+        android:minHeight="60dp"
         android:background="@drawable/login_loginbutton"
         android:text="@string/registerDriver_registerButton"
         android:textColor="@color/black"
@@ -258,6 +276,7 @@
             android:id="@+id/mainIdentificadorRegisterDriver"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minHeight="48dp"
             android:background="@drawable/login_edittexttemplate"
             android:hint="@string/registerDriver_mainIdentificator" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -274,6 +293,5 @@
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/registerDriverButton" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

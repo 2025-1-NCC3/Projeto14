@@ -8,7 +8,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingBottom="?attr/actionBarSize">
 
         <TextView
             android:id="@+id/textView5"
@@ -25,7 +26,7 @@
             android:id="@+id/textInputLayout14"
             android:layout_width="161dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="5dp"
             app:layout_constraintEnd_toStartOf="@+id/textInputLayout13"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -60,7 +61,7 @@
             android:id="@+id/textInputLayout15"
             android:layout_width="161dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             app:layout_constraintEnd_toStartOf="@+id/textInputLayout16"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -157,7 +158,7 @@
         <RadioGroup
             android:id="@+id/radioGroup"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="20dp"
             android:layout_marginStart="30dp"
             android:layout_marginTop="10dp"
             android:orientation="horizontal"
@@ -183,7 +184,7 @@
             android:id="@+id/textInputLayout7"
             android:layout_width="391dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/radioGroup">
@@ -200,7 +201,7 @@
             android:id="@+id/textInputLayout8"
             android:layout_width="391dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout7">
@@ -217,12 +218,12 @@
             android:id="@+id/cancelButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="5dp"
             android:background="@drawable/login_registerbutton"
-            android:text="@string/profile_AccountInformation_cancelButton"
             android:onClick="cancelButton"
+            android:text="@string/profile_AccountInformation_cancelButton"
             app:layout_constraintEnd_toStartOf="@+id/updateButton"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -234,6 +235,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:layout_marginEnd="20dp"
+
             android:background="@drawable/login_registerbutton"
             android:text="@string/profile_AccountInformation_updateButton"
             app:layout_constraintBaseline_toBaselineOf="@+id/cancelButton"
@@ -248,8 +250,10 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
+            android:layout_marginBottom="100dp"
             android:background="@drawable/accountinformation_deleteaccountbutton"
             android:text="@string/profile_AccountInformation_deleteButton"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cancelButton" />

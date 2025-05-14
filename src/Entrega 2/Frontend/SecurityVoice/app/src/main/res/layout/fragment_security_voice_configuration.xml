@@ -8,7 +8,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
 
         <TextView
             android:id="@+id/textView8"
@@ -19,7 +20,7 @@
             android:shadowRadius="40"
             android:text="@string/securityVoiceConfiguration_Title"
             android:textAlignment="center"
-            android:textSize="36dp"
+            android:textSize="32dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
@@ -30,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="10dp"
             android:text="@string/securityVoiceConfiguration_emergencyCode"
             android:textSize="28sp"
             android:textStyle="bold"
@@ -77,7 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:text="@string/securityVoiceConfiguration_uAudioExecution"
             android:textSize="28sp"
             android:textStyle="bold"
@@ -111,7 +112,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:text="@string/securityVoiceConfiguration_commandVoice"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView12" />
@@ -121,7 +122,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="150dp"
+            android:layout_marginTop="120dp"
             android:layout_marginEnd="10dp"
             android:background="@drawable/login_loginbutton"
             android:text="Salvar"
@@ -153,7 +154,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="20dp"
             android:text="Observações: No Android Studio, o sistema de reconhecimento de áudio gera erros constantes, mas pode funcionar. É recomendado fazer o teste pelo celular; Ao clicar em salvar, o sistema vai fazer uma requisição para a APi e retonará 'Erro: Servidor não responde', pois a API não está ligada."
             android:textStyle="bold"
