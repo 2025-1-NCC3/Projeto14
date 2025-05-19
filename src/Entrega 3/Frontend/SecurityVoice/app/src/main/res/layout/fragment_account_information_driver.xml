@@ -15,6 +15,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:autoSizeMaxTextSize="36sp"
+            android:autoSizeMinTextSize="18sp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeStepGranularity="2sp"
             android:text="@string/profile_AccountInformation_Title"
             android:textSize="36sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -23,9 +27,11 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout14"
-            android:layout_width="161dp"
-            android:layout_height="wrap_content"
+            android:layout_width="160dp"
             android:layout_marginTop="20dp"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_min="25dp"
+            app:layout_constraintHeight_max="60dp"
             app:layout_constraintEnd_toStartOf="@+id/textInputLayout13"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -42,7 +48,9 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout13"
             android:layout_width="160dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_min="25dp"
+            app:layout_constraintHeight_max="60dp"
             app:layout_constraintBaseline_toBaselineOf="@+id/textInputLayout14"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -59,7 +67,9 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout15"
             android:layout_width="161dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_min="25dp"
+            app:layout_constraintHeight_max="60dp"
             android:layout_marginTop="20dp"
             app:layout_constraintEnd_toStartOf="@+id/textInputLayout16"
             app:layout_constraintHorizontal_bias="0.5"
@@ -77,7 +87,9 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout16"
             android:layout_width="160dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_min="25dp"
+            app:layout_constraintHeight_max="60dp"
             app:layout_constraintBaseline_toBaselineOf="@+id/textInputLayout15"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -120,8 +132,6 @@
             android:id="@+id/AccountInformation_yearDateSpinner"
             android:layout_width="124dp"
             android:layout_height="wrap_content"
-
-
             android:background="@drawable/login_edittexttemplate"
 
             android:entries="@array/registerDriver_yearDateSpinnerOptions"
@@ -138,6 +148,10 @@
             android:layout_marginTop="10dp"
             android:text="@string/registerDriver_genderTitle"
             android:textSize="18sp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeStepGranularity="2dp"
+            android:autoSizeMaxTextSize="18sp"
+            android:autoSizeMinTextSize="10sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/AccountInformation_dayDateSpinner" />
@@ -150,6 +164,10 @@
             android:layout_marginTop="10dp"
             android:text="@string/registerDriver_dateTitle"
             android:textSize="18sp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeStepGranularity="2dp"
+            android:autoSizeMaxTextSize="18sp"
+            android:autoSizeMinTextSize="10sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout15" />
@@ -158,6 +176,7 @@
             android:id="@+id/radioGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+
             android:layout_marginStart="30dp"
             android:layout_marginTop="10dp"
             android:orientation="horizontal"
@@ -167,7 +186,8 @@
             <RadioButton
                 android:id="@+id/femaleRadioButton"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+
                 android:background="@drawable/login_edittexttemplate"
                 android:text="@string/registerDriver_genderFemale" />
 
@@ -175,15 +195,19 @@
                 android:id="@+id/maleRadioButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+
                 android:background="@drawable/login_edittexttemplate"
                 android:text="@string/registerDriver_genderMale" />
         </RadioGroup>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout7"
-            android:layout_width="391dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
+            android:layout_marginStart="10dp"
             android:layout_marginTop="20dp"
+            android:layout_marginEnd="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/radioGroup">
@@ -198,9 +222,11 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout8"
-            android:layout_width="391dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="20dp"
+            android:layout_marginEnd="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout7">
@@ -221,8 +247,8 @@
             android:layout_marginTop="30dp"
             android:layout_marginEnd="5dp"
             android:background="@drawable/login_registerbutton"
-            android:text="@string/profile_AccountInformation_cancelButton"
             android:onClick="cancelButton"
+            android:text="@string/profile_AccountInformation_cancelButton"
             app:layout_constraintEnd_toStartOf="@+id/updateButton"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -232,6 +258,7 @@
             android:id="@+id/updateButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+
             android:layout_marginStart="5dp"
             android:layout_marginEnd="20dp"
             android:background="@drawable/login_registerbutton"
@@ -245,6 +272,7 @@
             android:id="@+id/deleteButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
