@@ -1,4 +1,4 @@
-# FECAP - Fundação de Comércio Álvares Penteado
+![image](https://github.com/user-attachments/assets/166fa497-e2c7-464b-b4f6-1a25bebfe3ef)# FECAP - Fundação de Comércio Álvares Penteado
 
 <p align="center">
 <a href= "https://www.fecap.br/"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhZPrRa89Kma0ZZogxm0pi-tCn_TLKeHGVxywp-LXAFGR3B1DPouAJYHgKZGV0XTEf4AE&usqp=CAU" alt="FECAP - Fundação de Comércio Álvares Penteado" border="0"></a>
@@ -71,7 +71,7 @@ Raiz/<br>
 |--------|------|-----------|------|
 | `v0.1.0` | 27-03-2025 | Entrega 1 - estrutura inicial do projeto, autenticação e navegação básica | [🔗 Release](https://github.com/2025-1-NCC3/Projeto14/releases/tag/v0.1.0-alpha) |
 | `v1.0.0` | 22-04-2025 | Entrega 2 - integração com backend, implementação da criptografia | [🔗 Release](https://github.com/2025-1-NCC3/Projeto14/releases/tag/v1.0-beta) |
-| `vX.X.X` | 18-05-2025 | Entrega 3 - finalização | [🔗 Release]() |
+| `v2.0.0` | 18-05-2025 | Entrega 3 - finalização | [🔗 Release](https://github.com/2025-1-NCC3/Projeto14/releases/tag/v2.0) |
 | `vX.X.X` | _a definir_ | Entrega 4 | _Em breve_ |
 
 > ℹ️ Todas as versões estão disponíveis na aba [Releases](https://github.com/2025-1-NCC3/Projeto14/releases).
