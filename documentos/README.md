@@ -24,3 +24,15 @@
 
 <b>Eduardo Chen Zou - [Trabalho/Documento](https://github.com/2025-1-NCC3/Projeto14/blob/main/documentos/Entrega%202/Programa%C3%A7%C3%A3o%20Orientada%20a%20Objetos/Diagrama%20Completo.pdf)</b>
 <br><br>
+
+## Entrega 3
+
+### Análise Descritiva de Dados
+
+<b>Vinicius dos Santos Ribeiro - [Trabalho/Documento](https://github.com/2025-1-NCC3/Projeto14/blob/main/documentos/Entrega%203/An%C3%A1lise%20Descritiva%20de%20Dados/An%C3%A1lise%20Descritiva%20de%20Dados_.xlsx)</b>
+<br><br>
+
+### Programação Orientada a Objetos e Estrutura de Dados
+
+<b>Vinicius dos Santos Ribeiro - [Trabalho/Documento](https://github.com/2025-1-NCC3/Projeto14/blob/main/documentos/Entrega%203/Programa%C3%A7%C3%A3o%20Orientada%20a%20Objetos/Estruturas%20de%20Dados.pdf)</b>
+<br><br>
