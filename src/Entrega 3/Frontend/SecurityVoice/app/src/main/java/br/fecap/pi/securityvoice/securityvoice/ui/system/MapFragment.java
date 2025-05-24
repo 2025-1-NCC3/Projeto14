@@ -14,6 +14,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
@@ -32,6 +34,7 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -101,9 +104,11 @@ import br.fecap.pi.securityvoice.resources.SpeechRecognizerClass;
 import br.fecap.pi.securityvoice.resources.SpeechRecognizerTypeExecution;
 import br.fecap.pi.securityvoice.R;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import br.fecap.pi.securityvoice.securityvoice.MainActivity;
@@ -135,6 +140,9 @@ public class MapFragment extends Fragment{
     private boolean ignoreNextQueryUpdate = false; // usado para evitar atualizações duplicadas na busca
     private MapboxNavigation mapboxNavigation; // gerencia a navegação do Mapbox
     boolean focusLocation = true; // Indica se a câmera do mapa deve seguir o usuário
+
+    private String destino;
+    private String origem;
 
     private final String locationPermission = Manifest.permission.ACCESS_FINE_LOCATION;
 
@@ -280,6 +288,23 @@ public class MapFragment extends Fragment{
                 })
                 .setNegativeButton("Cancelar", null)
                 .show();
+    }
+
+    private String getLocationNameFromPoint(Point point) {
+        Geocoder geocoder = new Geocoder(requireContext(), Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(
+                    point.latitude(),
+                    point.longitude(),
+                    1
+            );
+            if (!addresses.isEmpty()) {
+                return addresses.get(0).getAddressLine(0); // Retorna o endereço completo
+            }
+        } catch (IOException e) {
+            Log.e("GeocoderError", "Erro ao buscar endereço: " + e.getMessage());
+        }
+        return "Local desconhecido"; // Fallback
     }
 
     @Override
@@ -451,6 +476,7 @@ public class MapFragment extends Fragment{
                             @Override
                             public void onClick(View view) {
                                 fetchRoute(placeAutocompleteSuggestion.getCoordinate());
+                                destino = placeAutocompleteSuggestion.getName();
                                 setRoute.setVisibility(View.GONE);
 
                                 try {
@@ -559,6 +585,7 @@ public class MapFragment extends Fragment{
                 setRoute.setText("Buscando rotas...");
                 RouteOptions.Builder builder = RouteOptions.builder();
                 Point origin = Point.fromLngLat(Objects.requireNonNull(location).getLongitude(), location.getLatitude());
+                origem = getLocationNameFromPoint(origin);
                 builder.coordinatesList(Arrays.asList(origin, point));
                 builder.alternatives(false);
                 builder.profile(DirectionsCriteria.PROFILE_DRIVING);
@@ -734,8 +761,8 @@ public class MapFragment extends Fragment{
         TextView driverName = mapFragment.findViewById(R.id.driverNameTravelAccepted);
         TextView x = mapFragment.findViewById(R.id.x);
 
-        destination.setText(SystemAtributes.travel.getDestination());
-        origin.setText(SystemAtributes.travel.getOrigin());
+        destination.setText(destino);
+        origin.setText(origem);
         date.setText(SystemAtributes.travel.getDate());
         cust.setText(SystemAtributes.travel.getCust());
         duration.setText(SystemAtributes.travel.getDuration());
