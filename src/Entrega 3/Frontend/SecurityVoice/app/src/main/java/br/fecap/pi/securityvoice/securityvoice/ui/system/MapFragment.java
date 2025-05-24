@@ -59,6 +59,7 @@ import com.mapbox.geojson.Point;
 import com.mapbox.maps.CameraOptions;
 import com.mapbox.maps.EdgeInsets;
 import com.mapbox.maps.MapView;
+import com.mapbox.maps.MapboxMap;
 import com.mapbox.maps.Style;
 import com.mapbox.maps.extension.style.layers.properties.generated.TextAnchor;
 import com.mapbox.maps.plugin.animation.MapAnimationOptions;
@@ -72,19 +73,31 @@ import com.mapbox.maps.plugin.gestures.OnMoveListener;
 import com.mapbox.maps.plugin.locationcomponent.LocationComponentConstants;
 import com.mapbox.maps.plugin.locationcomponent.LocationComponentPlugin;
 import com.mapbox.maps.plugin.locationcomponent.generated.LocationComponentSettings;
+import com.mapbox.navigation.base.formatter.DistanceFormatterOptions;
 import com.mapbox.navigation.base.options.NavigationOptions;
 import com.mapbox.navigation.base.route.NavigationRoute;
 import com.mapbox.navigation.base.route.NavigationRouterCallback;
 import com.mapbox.navigation.base.route.RouterFailure;
 import com.mapbox.navigation.base.route.RouterOrigin;
+import com.mapbox.navigation.base.trip.model.RouteProgress;
 import com.mapbox.navigation.core.MapboxNavigation;
+import com.mapbox.navigation.core.MapboxNavigationProvider;
 import com.mapbox.navigation.core.directions.session.RoutesObserver;
 import com.mapbox.navigation.core.directions.session.RoutesUpdatedResult;
+import com.mapbox.navigation.core.formatter.MapboxDistanceFormatter;
 import com.mapbox.navigation.core.lifecycle.MapboxNavigationApp;
 import com.mapbox.navigation.core.trip.session.LocationMatcherResult;
 import com.mapbox.navigation.core.trip.session.LocationObserver;
+import com.mapbox.navigation.core.trip.session.RouteProgressObserver;
 import com.mapbox.navigation.ui.base.util.MapboxNavigationConsumer;
+import com.mapbox.navigation.ui.maneuver.api.MapboxManeuverApi;
+import com.mapbox.navigation.ui.maneuver.model.Maneuver;
+import com.mapbox.navigation.ui.maneuver.model.ManeuverError;
+import com.mapbox.navigation.ui.maneuver.view.MapboxManeuverView;
 import com.mapbox.navigation.ui.maps.location.NavigationLocationProvider;
+import com.mapbox.navigation.ui.maps.route.arrow.api.MapboxRouteArrowApi;
+import com.mapbox.navigation.ui.maps.route.arrow.api.MapboxRouteArrowView;
+import com.mapbox.navigation.ui.maps.route.arrow.model.RouteArrowOptions;
 import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineApi;
 import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineView;
 import com.mapbox.navigation.ui.maps.route.line.model.MapboxRouteLineOptions;
@@ -141,8 +154,49 @@ public class MapFragment extends Fragment{
     private MapboxNavigation mapboxNavigation; // gerencia a navegação do Mapbox
     boolean focusLocation = true; // Indica se a câmera do mapa deve seguir o usuário
 
-    private String destino;
-    private String origem;
+    private Point origem_coordenadas;
+    private String nome_destino;
+    private String nome_origem;
+    private MapboxManeuverView maneuverView;
+    private MapboxManeuverApi maneuverApi;
+    private MapboxRouteArrowView arrowView;
+    private MapboxRouteArrowApi arrowApi = new MapboxRouteArrowApi();
+    private RouteProgressObserver routeProgressObserver = new RouteProgressObserver() {
+        @Override
+        public void onRouteProgressChanged(@NonNull RouteProgress routeProgress) {
+            if (mapView == null) {
+                return; // Evita operações em uma View destruída
+            }
+
+            MapboxMap mapboxMap = mapView.getMapboxMap();
+
+            // Obtém o estilo de forma ASSÍNCRONA (evita null e vazamentos)
+            mapboxMap.getStyle(new Style.OnStyleLoaded() {
+                @Override
+                public void onStyleLoaded(@NonNull Style style) {
+                    // Só executa se o estilo estiver carregado e válido
+                    if (style.isValid()) {
+                        arrowView.renderManeuverUpdate(style, arrowApi.addUpcomingManeuverArrow(routeProgress));
+                    }
+                }
+            });
+
+            // Restante do seu código (maneuverApi)...
+            maneuverApi.getManeuvers(routeProgress).fold(
+                    error -> {
+                        Toast.makeText(requireContext(), "Erro: visualizador de manobras", Toast.LENGTH_SHORT).show();
+                        return new Object();
+                    },
+                    maneuvers -> {
+                        if (maneuverView != null) {
+                            maneuverView.setVisibility(View.VISIBLE);
+                            maneuverView.renderManeuvers(maneuverApi.getManeuvers(routeProgress)); // Usa a lista já obtida
+                        }
+                        return new Object();
+                    }
+            );
+        }
+    };
 
     private final String locationPermission = Manifest.permission.ACCESS_FINE_LOCATION;
 
@@ -307,6 +361,18 @@ public class MapFragment extends Fragment{
         return "Local desconhecido"; // Fallback
     }
 
+    private double calculateDistance(Point origin, Point destination) {
+        Location originLocation = new Location("");
+        originLocation.setLatitude(origin.latitude());
+        originLocation.setLongitude(origin.longitude());
+
+        Location destinationLocation = new Location("");
+        destinationLocation.setLatitude(destination.latitude());
+        destinationLocation.setLongitude(destination.longitude());
+
+        return originLocation.distanceTo(destinationLocation); // Distância em metros
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -331,6 +397,10 @@ public class MapFragment extends Fragment{
         mapView = view.findViewById(R.id.mapView);
         focusLocationBtn = view.findViewById(R.id.focusLocation);
         setRoute = view.findViewById(R.id.setRoute);
+        maneuverView = view.findViewById(R.id.maneuverView);
+
+        maneuverApi = new MapboxManeuverApi(new MapboxDistanceFormatter(new DistanceFormatterOptions.Builder(requireContext()).build()));
+        arrowView = new MapboxRouteArrowView(new RouteArrowOptions.Builder(requireContext()).build());
 
         waitingDriver = view.findViewById(R.id.waitingDriver);
         travelAccepted = view.findViewById(R.id.travelAccepted);
@@ -349,6 +419,7 @@ public class MapFragment extends Fragment{
         mapboxNavigation = new MapboxNavigation(navigationOptions);
         mapboxNavigation.registerRoutesObserver(routesObserver);
         mapboxNavigation.registerLocationObserver(locationObserver);
+        mapboxNavigation.registerRouteProgressObserver(routeProgressObserver);
 
         PlaceAutocomplete placeAutocomplete = PlaceAutocomplete.create(getString(R.string.mapbox_access_token));
         searchET = view.findViewById(R.id.searchET);
@@ -476,7 +547,8 @@ public class MapFragment extends Fragment{
                             @Override
                             public void onClick(View view) {
                                 fetchRoute(placeAutocompleteSuggestion.getCoordinate());
-                                destino = placeAutocompleteSuggestion.getName();
+                                Point destino_coordenadas = placeAutocompleteSuggestion.getCoordinate();
+                                nome_destino = placeAutocompleteSuggestion.getName();
                                 setRoute.setVisibility(View.GONE);
 
                                 try {
@@ -489,10 +561,11 @@ public class MapFragment extends Fragment{
                                 Integer driverId = 0;
                                 Integer passengerId = SystemAtributes.user.getId();
 
-                                Double distance = 0.0; //Colocar aqui a quilometragem
+                                Double distance = calculateDistance(origem_coordenadas, destino_coordenadas) / 1000; //Colocar aqui a quilometragem
 
-                                String destination = "COLOCAR AQUI O DESTINO";
-                                String origin = "COLOCAR AQUI A ORIGEM";
+                                String destination = nome_destino;
+                                String origin = nome_origem;
+
                                 String cust = "R$ " + (distance * 2.0);
                                 String date = new Date().toString();
 
@@ -584,9 +657,9 @@ public class MapFragment extends Fragment{
                 setRoute.setEnabled(false);
                 setRoute.setText("Buscando rotas...");
                 RouteOptions.Builder builder = RouteOptions.builder();
-                Point origin = Point.fromLngLat(Objects.requireNonNull(location).getLongitude(), location.getLatitude());
-                origem = getLocationNameFromPoint(origin);
-                builder.coordinatesList(Arrays.asList(origin, point));
+                origem_coordenadas = Point.fromLngLat(Objects.requireNonNull(location).getLongitude(), location.getLatitude());
+                nome_origem = getLocationNameFromPoint(origem_coordenadas);
+                builder.coordinatesList(Arrays.asList(origem_coordenadas, point));
                 builder.alternatives(false);
                 builder.profile(DirectionsCriteria.PROFILE_DRIVING);
                 builder.bearingsList(Arrays.asList(Bearing.builder().angle(location.getBearing()).degrees(45.0).build(), null));
@@ -625,6 +698,10 @@ public class MapFragment extends Fragment{
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+
+        // Remove o observer para evitar vazamentos
+        MapboxNavigation navigation = MapboxNavigationProvider.retrieve();
+        navigation.unregisterRouteProgressObserver(routeProgressObserver);
 
         if (routeLineView != null) {
             routeLineView.cancel();
@@ -761,8 +838,8 @@ public class MapFragment extends Fragment{
         TextView driverName = mapFragment.findViewById(R.id.driverNameTravelAccepted);
         TextView x = mapFragment.findViewById(R.id.x);
 
-        destination.setText(destino);
-        origin.setText(origem);
+        destination.setText(SystemAtributes.travel.getDestination());
+        origin.setText(SystemAtributes.travel.getOrigin());
         date.setText(SystemAtributes.travel.getDate());
         cust.setText(SystemAtributes.travel.getCust());
         duration.setText(SystemAtributes.travel.getDuration());
