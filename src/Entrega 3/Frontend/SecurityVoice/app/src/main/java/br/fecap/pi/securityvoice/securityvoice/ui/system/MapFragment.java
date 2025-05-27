@@ -463,14 +463,16 @@ public class MapFragment extends Fragment{
                                 Integer driverId = 0;
                                 Integer passengerId = SystemAtributes.user.getId();
 
-                                Double distance = 0.0; //Colocar aqui a quilometragem
+                                Double distance = Math.random()*200.0; //Colocar aqui a quilometragem
 
-                                String destination = "COLOCAR AQUI O DESTINO";
-                                String origin = "COLOCAR AQUI A ORIGEM";
-                                String cust = "R$ " + (distance * 2.0);
+                                String destination = placeAutocompleteSuggestion.getName();
+                                String origin = "FECAP - Fundação Escola de Comércio Álv...";
+
+                                Double custo = distance * 2.0;
+                                String cust = "R$ " + String.format("%.2f",custo);
                                 String date = new Date().toString();
 
-                                double time = (distance / 30) * 60 * 60;
+                                double time = (distance / 30.0) * 60.0 * 60.0;
                                 String duration = getDuration(time);
 
                                 String driverName = "NaN";
@@ -654,7 +656,7 @@ public class MapFragment extends Fragment{
                     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
 
                     transaction.replace(R.id.nav_host_fragment_activity_main, new TravelFragment());
-
+                    transaction.commit();
                 }else{
                     Toast.makeText(getActivity().getApplicationContext(), "Erro ao cancelar viagem!", Toast.LENGTH_LONG).show();
                 }
@@ -769,6 +771,8 @@ public class MapFragment extends Fragment{
                     SystemAtributes.travel = Criptography.travelDecrypt(response.body());
                     if(!SystemAtributes.travel.getStatus().equals("IN PROGRESS")){
                         Toast.makeText(getActivity().getApplicationContext(), "Você chegou ao seu destino!", Toast.LENGTH_LONG).show();
+                        SystemAtributes.travel = null;
+
                         handler.removeCallbacksAndMessages(null);
                         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
 
@@ -793,6 +797,7 @@ public class MapFragment extends Fragment{
         ConstraintLayout acceptingTravel = mapFragment.findViewById(R.id.acceptingTravel);
         acceptingTravel.setVisibility(View.VISIBLE);
 
+
         Button travelFinish = mapFragment.findViewById(R.id.travelFinish);
 
         travelFinish.setOnClickListener(new View.OnClickListener() {
@@ -811,6 +816,7 @@ public class MapFragment extends Fragment{
                     public void onResponse(Call<Travel> call, Response<Travel> response) {
                         if(response.isSuccessful()){
                             Toast.makeText(getActivity().getApplicationContext(), "Viagem finalizada com sucesso!", Toast.LENGTH_LONG).show();
+                            SystemAtributes.travel = null;
 
                             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction(); //Instânciando um objeto de transação de fragments
 
@@ -836,7 +842,7 @@ public class MapFragment extends Fragment{
     }
 
     public void travelAcceptedWindowLoad(){
-        travelAccepted.setVisibility(View.VISIBLE);
+        travelAccepted();
     }
 
     public void acceptingTravelWindowLoad(){
