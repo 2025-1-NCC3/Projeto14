@@ -8,7 +8,7 @@
 
 ## Grupo 14
 
-## Integrantes: <a href="https://github.com/BernardoSeijasCavalcante">Bernardo Seijas Cavalcante</a>, <a href="https://www.linkedin.com/in/eduardo-chen-zou-637443292/">Eduardo Chen Zou</a>, <a href="https://github.com/FabianoChou">Fabiano Henrique Chou</a>, <a href="https://github.com/ViniSantos09">Vinicius dos Santos Ribeiro</a>
+## Integrantes: <a href="https://github.com/BernardoSeijasCavalcante">Bernardo Seijas Cavalcante</a>, <a href="https://www.linkedin.com/in/eduardo-chen-zou-637443292/">Eduardo Chen Zou</a>, <a href="https://github.com/FabianoChou">Fabiano Henrique Chou </a>, <a href="https://github.com/ViniSantos09">Vinicius dos Santos Ribeiro</a>
 
 ## Professores Orientadores: <a href="">Marco Aurelio Lima Barbosa</a>, <a href="">Katia Milani Lara Bossi</a>,<a href="">Victor Bruno Alexander Rosetti de Quiroz</a>, <a href="">Vinicius Heltai Pacheco</a>
 
